@@ -1,9 +1,9 @@
 # Short Temper
 
-Personal ZMK config for a Temper, a 36-key wireless split keyboard. Each half has a ProMicro
-NRF52840 controller, a clone of the nice!nano v2, and a connector for an optional nice!view screen.
-The screens only go on at a desk, and the firmware builds for them either way. It's based on the seller's repo
-([Sifan6688/Temper_zmk](https://github.com/Sifan6688/Temper_zmk), kept as the `upstream` remote).
+ZMK config for a Temper, a 36-key wireless split keyboard. Each half has a ProMicro NRF52840 (a
+nice!nano v2 clone) and a socket for an optional nice!view screen. The screens only go on at a desk,
+and the same firmware runs with or without them. It's based on the seller's repo,
+[Sifan6688/Temper_zmk](https://github.com/Sifan6688/Temper_zmk), kept as the `upstream` remote.
 
 ## Keymap
 
@@ -15,14 +15,13 @@ The screens only go on at a desk, and the firmware builds for them either way. I
 ![NAV layer: arrows, Home, End, Page Up, Page Down, Tab, Esc and modifiers](keymap_img/temper-nav.svg)
 ![SYSTEM layer: bootloader, Bluetooth clearing, USB and Bluetooth toggle, and soft off](keymap_img/temper-system.svg)
 
-The drawings are generated from `config/temper.keymap`, so trust them over any notes here if they
-ever disagree. Key positions and the board outline come from the
-[Temper PCB](https://github.com/gurland/temper).
+The drawings are generated from `config/temper.keymap`, so they win if this page disagrees. Key
+positions and the board outline come from the [Temper PCB](https://github.com/gurland/temper).
 
 ## Reaching the layers
 
-There's no number row, and nothing but the thumbs switches layers. Each layer is only active while
-you hold its thumb key. Holding both Space thumbs together opens SYSTEM.
+There's no number row, and only the thumbs switch layers. A layer lasts while you hold its thumb
+key, and holding both Space thumbs opens SYSTEM.
 
 ```mermaid
 flowchart LR
@@ -49,29 +48,39 @@ flowchart LR
 
 ### Common keys
 
-| To type | Press |
+NUM, on the right inner thumb:
+
+| Press | To type |
 |---|---|
-| Backspace | Tap the left outer thumb, or hold it and press P (holding P repeats) |
-| Numbers 1–0 | Hold the right inner thumb, then the top row (Q is 1, P is 0) |
-| Symbols `!@#$%^&*()` | Hold the left inner thumb, then the top row |
-| `[` `]` `` ` `` `\` `;` | Hold the left inner thumb, then H, J, K, L, ' |
-| `{` `}` `~` `\|` `:` | Hold the left inner thumb, then N, M, comma, full stop, / |
-| Cmd shortcuts | Hold the left middle thumb, then the letter |
-| Ctrl shortcuts | Hold the right middle thumb, then the letter |
-| Delete | Hold the left inner thumb, then D |
-| Arrows | Hold the left outer thumb, then I (up), J (left), K (down), L (right) |
-| Home, End | Hold the left outer thumb, then U, O |
-| Page Up, Page Down | Hold the left outer thumb, then Y, H |
-| Tab, Esc | Hold the left outer thumb, then W, Q |
-| F1–F10 | Hold the right inner thumb, then the home row (A is F1, ' is F10) |
-| F11, F12 | Hold the right inner thumb, then Z, X |
-| Previous, Play, Next | Hold the right inner thumb, then N, M, comma |
-| Volume down, up, Mute | Hold the right inner thumb, then full stop, /, B |
+| The top row, Q to P | 1 to 0 |
+| The home row, A to ' | F1 to F10 |
+| Z, X | F11, F12 |
+| N, M, comma | Previous, Play, Next |
+| Full stop, /, B | Volume down, Volume up, Mute |
+
+SYM, on the left inner thumb:
+
+| Press | To type |
+|---|---|
+| The top row | `!@#$%^&*()` |
+| H, J, K, L, ' | `[` `]` `` ` `` `\` `;` |
+| N, M, comma, full stop, / | `{` `}` `~` `\|` `:` |
+| D | Delete |
+
+NAV, on the left outer thumb:
+
+| Press | To type |
+|---|---|
+| I, J, K, L | Up, left, down, right |
+| U, O | Home, End |
+| Y, H | Page Up, Page Down |
+| W, Q | Tab, Esc |
+| P | Backspace, which repeats while held |
 
 ### Modifiers with navigation
 
-While you hold the left outer thumb, A, S, D and F are Ctrl, Option, Cmd and Shift, so your left hand
-holds modifiers and your right hand navigates:
+On NAV, A, S, D and F are Ctrl, Option, Cmd and Shift, so the left hand holds modifiers while the
+right hand navigates:
 
 | To do | Hold the left outer thumb, then |
 |---|---|
@@ -85,9 +94,8 @@ holds modifiers and your right hand navigates:
 | The app's windows (Ctrl+down) | A + K |
 
 Holding Enter is Ctrl too, so for Spaces and Mission Control you can hold Enter instead of A, with
-your other thumb on the left outer thumb.
-
-Home and End scroll the whole document in many Mac apps, so use D + J or L to jump within a line.
+your left thumb on NAV. Home
+and End scroll the whole document in many Mac apps, so use D + J or L to jump within a line.
 
 ### Combos
 
@@ -102,24 +110,22 @@ Home and End scroll the whole document in many Mac apps, so use D + J or L to ju
 | J + K | `-` |
 | K + L | `=` |
 
-Combos only work on Base, so moving between arrows on a layer can't trigger them.
-
-U + I, I + O and X + C have a 30 ms window, so those keys need to land almost exactly together.
-The others have ZMK's default window.
+Combos only work on Base, so moving between arrows on a layer can't trigger them. U + I, I + O and
+X + C have a 30 ms window, so those keys need to land almost together. The rest use ZMK's default.
 
 ### Timing
 
 The layer thumbs are tuned so fast typing stays reliable:
 
-- **While typing:** a thumb pressed within 125 ms of another key is always a tap, so pause briefly
-  after typing before you hold a thumb for a layer.
-- **Rolling:** if you release the thumb before the next key, it's a tap. To use a layer, hold the thumb
-  until you've released the other key, or for 200 ms.
-- **Repeating:** tap a thumb, then hold it within 180 ms, to repeat Space or Backspace.
+- A thumb pressed within 125 ms of another key is always a tap, so pause briefly after typing before
+  you hold a thumb for a layer.
+- If you release the thumb before the next key, it's a tap. To use the layer, hold the thumb until
+  you've released the other key, or for 200 ms.
+- To repeat Space or Backspace, tap the thumb, then hold it within 180 ms.
 
 ## Keys to be careful with
 
-SYSTEM keys need both Space thumbs held, so they can't be hit by accident while typing:
+SYSTEM keys need both Space thumbs held, so typing can't hit them by accident:
 
 | Both Space thumbs + | What it does |
 |---|---|
@@ -144,8 +150,8 @@ into a computer it types over USB, so press both Space thumbs + Y to use Bluetoo
 | 4 | A |
 
 To pair a device, select an unused slot and choose `Short Temper` in the device's Bluetooth settings.
-If you forget the keyboard on a device, select its slot and press both Space thumbs + T before
-pairing it again.
+To pair a device again after forgetting the keyboard on it, select its slot and press both Space
+thumbs + T first.
 
 ## Power
 
@@ -155,13 +161,11 @@ pairing it again.
 | Soft off | Both Space thumbs + hold O for 2 seconds, then let go | Outer thumb on each half |
 | Off | Power switch | Power switch |
 
-Soft off is for wearing or carrying the keyboard. It turns off both halves at once, and only the
-outer thumbs can wake them, so stray presses on the other keys do nothing. Wake each half with its
-own outer thumb. If a half won't wake, unplug USB and turn its power switch off and on.
+Soft off is for wearing or carrying the keyboard. It turns off both halves at once, and only each
+half's outer thumb wakes it, so stray presses on other keys do nothing. If a half won't wake, unplug
+USB and turn its power switch off and on.
 
 ## Screens
-
-The nice!view screens are optional. The same firmware runs with or without them.
 
 <table>
   <tr>
@@ -193,80 +197,76 @@ The nice!view screens are optional. The same firmware runs with or without them.
   </tr>
 </table>
 
-- **Left:** battery for each half, the layer, the five Bluetooth slots, held modifiers and Caps Lock.
-  Below them, the combos on Base, or the left hand's keys while you hold a layer. A filled slot is
-  in use, a double outline is selected but not connected, an outline is connected, and a dashed
-  outline is paired.
-- **Right:** on Base, which thumbs open each layer. While you hold a layer, the right hand's keys.
-  The left half sends the layer to the right half, which needs the ZMK fork in `config/west.yml`.
-- **Keys:** each hand's keys sit where they are on the board, stagger and all. The thumb you're
-  holding is solid, and a key that does nothing on that layer is a dot.
-- **Charging:** while a half is plugged in, its battery shows a bolt instead of a level. The
-  nice!nano measures the battery's voltage, and a charger holds that near full, so a charging half
-  always reads 100%. The right half tells the left half when it's plugged in, so both screens show
-  it. Your computer's Bluetooth battery reading still shows 100% for a charging half.
+The left screen shows both batteries, the layer, the five Bluetooth slots, held modifiers and Caps
+Lock. Below them are the combos on Base, or the left hand's keys while you hold a layer. A filled
+slot is in use, a double outline is selected but not connected, an outline is connected, and a
+dashed outline is paired.
 
-**Battery:** nothing moves on the screens. They only redraw when something on them changes: a layer,
-a modifier, a battery level or a connection. ZMK's display timer runs 100 times a second while
-you type, and stops after 30 seconds without a key on that half. The stock nice!view settings keep
-it running all the time. A screen holds its picture with almost no power.
+The right screen shows which thumbs open each layer on Base, and the right hand's keys while you
+hold a layer. The left half sends it the layer, which needs the ZMK fork in `config/west.yml`.
 
-**Fitting or removing a screen:** turn that half's switch off and unplug USB first. Pins pushed in
-at an angle can touch their neighbours while powered. A screen also starts out full of random
-pixels, and the keyboard only clears it when it starts up. The keyboard can't tell whether a screen
-is fitted, because it only sends to the screen, so it draws either way.
+Keys sit where they are on the board, stagger and all. The thumb you're holding is solid, and a key
+that does nothing on that layer is a dot. A half on USB shows a bolt instead of a battery level,
+because the nice!nano measures voltage and a charger holds it near full. The right half tells the
+left when it's plugged in, so both screens show it. Your computer's Bluetooth battery reading still
+says 100% for a charging half.
 
-To change what the screens show, edit `art/screens.py`, then run `uv run art/screens.py`. It
-writes the firmware's images and icons in `boards/shields/nice_view_legend/widgets/` and the images
-above. Then build and flash both halves.
+The screens cost little battery. They redraw only when a layer, modifier, battery level or
+connection changes, and a screen holds its picture with almost no power. ZMK's display timer runs
+100 times a second while you type and stops 30 seconds after the last key on that half, where the
+stock nice!view settings keep it running.
+
+Switch a half off and unplug USB before fitting or removing its screen, as pins pushed in at an
+angle can touch their neighbours while powered. A new screen is full of random pixels until the
+keyboard starts up and clears it. The keyboard only sends to the screen, so it can't tell whether
+one is fitted and draws either way.
+
+To change what the screens show, edit `art/screens.py` and run `uv run art/screens.py`. It writes
+the firmware's images and icons to `boards/shields/nice_view_legend/widgets/`, and the images above.
+Then build and flash both halves. [The shield's README](boards/shields/nice_view_legend/README.md)
+explains how the halves share the layer and charging state.
 
 ## Thigh holster
 
 ![The faceted holster pulled apart in a line: the keyboard, its screws, the holster's top and back, the clip and its steel spine](docs/holster/exploded.jpg)
 
 A 3D-printed holster wears each half on a thigh, clipped into a front pocket, and the keyboard lifts
-straight out for desk use. The parts, how to print them and how they go together are in
-[case/README.md](case/README.md).
+straight out for desk use. [case/README.md](case/README.md) covers the parts, printing and assembly.
 
 ## Known gaps
 
-These are still missing, and they're the next things to sort out:
-
-- **Option:** it's only on the NAV layer, where the right hand's keys are navigation, so Option with a
-  right-hand letter doesn't work.
-- **Left Shift:** Shift on Base is only on the right outer thumb.
+- Option is only on NAV, where the right hand's keys are navigation, so Option with a right-hand
+  letter doesn't work.
+- Shift on Base is only on the right outer thumb.
 
 ## What's different from upstream
 
-- **Left outer thumb:** taps Backspace rather than the Non-US Backslash key, which isn't much use
-  on a Mac.
-- **Cmd and Ctrl:** the left middle thumb is a plain Cmd key, so shortcuts like Cmd+C work. The
-  seller's key could only tap Cmd and sent Ctrl when held, so Ctrl moved to holding the right middle
-  thumb.
-- **Space:** both inner thumbs are Space. The seller's left Space was on the middle thumb.
-- **Punctuation:** the right side of the SYM layer has the brackets, backslash, pipe, backtick and
-  tilde, which the seller's keymap left out. The bottom row is the home row shifted.
-- **Apostrophe on Base:** `'` (Shift for `"`) is where `;` was, right of L, as it's typed far more
-  often. `;` and `:` moved to the same key on SYM, and its bottom row.
-- **Backspace on P:** hold the left outer thumb and press P.
-- **NAV layer:** the seller's ARROWS layer is now a full navigation layer on the right hand, with
-  modifiers on the left home row.
-- **NUM layer:** adds F keys, volume and media, and drops the spare Backspaces on H and J.
-- **Combos:** they only work on Base.
-- **Name:** advertises as Short Temper (`config/temper.conf`). `src/ble_name.c` replaces any older
-  name stored in settings.
-- **Bluetooth:** adds slot 4, a key to clear one slot, and a USB/Bluetooth toggle.
-- **Power:** adds sleep and soft off. The key matrix needed `wakeup-source` to wake from sleep.
-- **SYSTEM layer:** the bootloader and Clear Bluetooth keys moved here from SYM, where rolling off
-  Space could hit them. The right half also gets a bootloader key, which it never had.
-- **Diagrams:** drawn from `config/temper.keymap` and the real PCB. The seller's workflow drew
+- The left outer thumb taps Backspace instead of the Non-US Backslash key, which isn't much use on a
+  Mac.
+- The left middle thumb is a plain Cmd key, so shortcuts like Cmd+C work. The seller's key tapped
+  Cmd and sent Ctrl when held, so Ctrl moved to holding the right middle thumb.
+- Both inner thumbs are Space. The seller's left Space was on the middle thumb.
+- SYM's right side adds the brackets, backslash, pipe, backtick and tilde, which the seller's keymap
+  left out. Its bottom row is the home row shifted.
+- `'` (Shift for `"`) takes the place of `;` right of L, as it's typed far more often. `;` and `:`
+  moved to SYM.
+- NAV replaces the seller's ARROWS layer, with navigation on the right hand, modifiers on the left
+  home row, and Backspace on P.
+- NUM adds F keys, volume and media, and drops the spare Backspaces on H and J.
+- Combos only work on Base.
+- It advertises as Short Temper (`config/temper.conf`), and `src/ble_name.c` replaces any older name
+  stored in settings.
+- Bluetooth adds slot 4, a key to clear one slot, and a USB/Bluetooth toggle.
+- Sleep and soft off are new. The key matrix needed `wakeup-source` to wake from sleep.
+- The bootloader and Clear Bluetooth keys moved from SYM, where rolling off Space could hit them, to
+  SYSTEM. The right half gained a bootloader key.
+- The diagrams are drawn from `config/temper.keymap` and the real PCB. The seller's workflow drew
   `boards/shields/temper/temper.keymap`, which the firmware doesn't use, and `config/temper.json`
   has the wrong stagger.
-- **Screens:** a layer legend on the right and a status screen on the left, in place of the stock
-  nice!view screens. See [Screens](#screens).
-- **ZMK:** built from [cormoran's fork](https://github.com/cormoran/zmk) of v0.3, for the split relay
-  events that carry the layer to the right half.
-- **Local tooling:** `build.sh` and `flash.sh`.
+- The screens replace the stock nice!view ones. They need
+  [cormoran's fork](https://github.com/cormoran/zmk) of ZMK v0.3, whose split relay events carry
+  the layer to the right half.
+- `build.sh` and `flash.sh` build and flash locally.
 
 ## Building and flashing
 
@@ -279,9 +279,9 @@ to `firmware/`, which git ignores.
 ./build.sh update   # re-run west update after editing config/west.yml
 ```
 
-`flash.sh` waits for the half's bootloader drive, so start it, then plug that half in and hold both
-Space thumbs and press B for left or N for right. The right half has to be connected to the left
-for its key to work.
+`flash.sh` waits for the half's bootloader drive. Start it, plug that half in, then hold both Space
+thumbs and press B for left or N for right. N only works while the right half is connected to the
+left.
 
 ```sh
 ./flash.sh left
@@ -297,10 +297,10 @@ flowchart LR
     other["Changed a .conf, config/west.yml<br/>or anything in boards/"] --> both["./build.sh<br/>./flash.sh left<br/>./flash.sh right"]
 ```
 
-The left half runs the keymap, so keymap changes only need the left half flashed. The exception is
-the first flash: do both halves, so they aren't running different firmware. If they don't reconnect
-afterwards, run `./build.sh reset`, copy `firmware/temper_reset.uf2` onto each half's `NICENANO`
-drive by hand, then flash left and right again. A reset clears that half's Bluetooth pairings.
+The left half runs the keymap, so keymap changes only need the left half flashed, except the first
+time: flash both, so the halves don't run different firmware. If they don't reconnect afterwards,
+run `./build.sh reset`, copy `firmware/temper_reset.uf2` onto each half's `NICENANO` drive by hand,
+then flash left and right again. A reset clears that half's Bluetooth pairings.
 
 Pushing to GitHub also builds the firmware in Actions, if they're enabled on the repo.
 
@@ -319,12 +319,13 @@ uv run keymap_img/draw.py keymap_img/blueprint.yaml
 
 ## Troubleshooting
 
-- **The bootloader keys don't work:** this keyboard has no reset button. The original Temper design
-  has one, but it isn't fitted here, and the clone controllers don't have one either. Use tweezers to briefly bridge the `RST` and `GND` pins on the
-  controller twice, quickly, with USB connected. Check the labels first, because bridging `GND` and
-  the battery pin next to it is a short circuit.
-- **A half looks dead on battery but works on USB:** it needs charging. USB powers it either way,
-  so leave it plugged in with the switch on for an hour or so.
+If the bootloader keys don't work, there's no reset button to fall back on. The Temper design has
+one, but it isn't fitted here, and the clone controllers don't have one either. With USB connected,
+use tweezers to bridge the controller's `RST` and `GND` pins briefly, twice, quickly. Check the
+labels first, because bridging `GND` and the battery pin next to it is a short circuit.
+
+A half that looks dead on battery but works on USB needs charging. USB powers it either way, so
+leave it plugged in with the switch on for an hour or so.
 
 ## Credits
 
