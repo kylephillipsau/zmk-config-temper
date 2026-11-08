@@ -87,7 +87,7 @@ dd { text-align: right; }
   <div class="stage" id="stage">
     <canvas id="view" tabindex="0" aria-label="3D model of the Short Temper keyboard and its thigh holster. Drag to rotate, and scroll or pinch to zoom."></canvas>
     <p class="hint" id="hint" style="margin:0">Drag to turn. Scroll to zoom.</p>
-    <p class="draft" style="margin:0">Draft, not yet printed</p>
+    <p class="draft" style="margin:0">Test fit printed, holster not yet</p>
   </div>
   <div class="strip">
     <div class="cell">
@@ -101,6 +101,10 @@ dd { text-align: right; }
         <button id="v-worn" type="button">Worn</button>
         <button id="v-fit" type="button">Test fit</button>
       </div>
+      <div class="group" role="group" aria-label="Holster shape">
+        <button id="h-plain" type="button">Plain</button>
+        <button id="h-faceted" type="button">Faceted</button>
+      </div>
       <div class="group" role="group" aria-label="Drawing style">
         <button id="s-lines" type="button">Lines</button>
         <button id="s-solid" type="button">Solid</button>
@@ -109,6 +113,7 @@ dd { text-align: right; }
     <div class="cell">
       <dl>
         <dt>Holster</dt><dd id="size"></dd>
+        <dt>Plastic</dt><dd id="grams"></dd>
         <dt>Clip</dt><dd>80 mm below the pocket edge</dd>
         <dt>Clip grip</dt><dd id="force"></dd>
         <dt>Keyboard</dt><dd>Temper by raeedcho, 36 keys</dd>
@@ -128,7 +133,6 @@ const MODEL = /*DATA*/;
   const lede = document.getElementById('lede');
   const hint = document.getElementById('hint');
   document.getElementById('force').textContent = 'about ' + MODEL.facts.force + ' N in PETG';
-  document.getElementById('size').textContent = MODEL.facts.size;
   if (window.matchMedia('(pointer: coarse)').matches) hint.textContent = 'Drag to turn. Pinch to zoom.';
 
   const VIEWS = {
@@ -137,6 +141,12 @@ const MODEL = /*DATA*/;
     fit: { text: 'A thin slice of the holster to print first. It has the walls, lips, peg and latch, so you can try the keyboard in it.' },
     worn: { text: 'The clip goes over the pocket edge and runs straight down inside, with the keyboard turned 180 degrees to meet a hanging hand.' },
   };
+  const SHAPES = {
+    plain: { note: '' },
+    faceted: { note: ' Faceted: two parts screwed together, a top that holds the keyboard and a back that sits on the leg. Every face of the back leans in at 45 degrees, so neither part needs supports.' },
+  };
+  // Which shape each holster part belongs to
+  const SHAPED = { holster: 'plain', faceted: 'faceted', back: 'faceted', joins: 'faceted' };
 
   let renderer;
   try {
@@ -190,12 +200,13 @@ const MODEL = /*DATA*/;
 
   // Each part: which group it moves with, and its grey in the solid style
   const GROUPS = {
-    keyboard: { move: [0, 0, 70], label: 'Keyboard, in its own case', parts: { case: 0x2a2a2a, caps: 0x3c3c3c, stems: 0x1a1a1a, pcb: 0x141414, usb: 0xb8b8b8, chips: 0x202020 } },
-    holster: { move: [0, 0, 0], label: 'Holster', parts: { holster: 0x8f8f8f } },
-    fit: { move: [0, 0, 0], label: 'Test fit', only: true, parts: { fit: 0x9a9a9a } },
-    screws: { move: [0, 0, -30], label: 'M3 screws', parts: { screws: 0xd0d0d0 } },
-    clip: { move: [0, 0, -62], label: 'Pocket clip', parts: { clip: 0xc4c4c4 } },
-    spine: { move: [0, -38, -92], label: 'Steel spine', parts: { spine: 0xf0f0f0 } },
+    keyboard: { move: [0, 0, 70], parts: { case: 0x2a2a2a, caps: 0x3c3c3c, stems: 0x1a1a1a, pcb: 0x141414, usb: 0xb8b8b8, chips: 0x202020 } },
+    holster: { move: [0, 0, 0], parts: { holster: 0x8f8f8f, faceted: 0x8f8f8f } },
+    back: { move: [0, 0, -18], parts: { back: 0x7d7d7d } },
+    fit: { move: [0, 0, 0], only: true, parts: { fit: 0x9a9a9a } },
+    screws: { move: [0, 0, 36], parts: { screws: 0xd0d0d0, joins: 0xd0d0d0 } },
+    clip: { move: [0, 0, -62], parts: { clip: 0xc4c4c4 } },
+    spine: { move: [0, -38, -92], parts: { spine: 0xf0f0f0 } },
   };
 
   const rig = new THREE.Group();
@@ -205,31 +216,29 @@ const MODEL = /*DATA*/;
   const blackFill = new THREE.MeshBasicMaterial({ color: 0x000000, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
   const whiteLine = new THREE.LineBasicMaterial({ color: 0xffffff });
 
+  const shapeNodes = { plain: [], faceted: [] };
   Object.keys(GROUPS).forEach(function (name) {
     const entry = GROUPS[name];
     entry.node = new THREE.Group();
     rig.add(entry.node);
     Object.keys(entry.parts).forEach(function (partName) {
+      let holder = entry.node;
+      if (SHAPED[partName]) {
+        holder = new THREE.Group();
+        entry.node.add(holder);
+        shapeNodes[SHAPED[partName]].push(holder);
+      }
       const shape = geometry(MODEL.parts[partName]);
       shape.computeVertexNormals();
       const solid = new THREE.MeshStandardMaterial({ color: entry.parts[partName], roughness: 0.72, metalness: 0.05, flatShading: true });
       const mesh = new THREE.Mesh(shape, blackFill);
       mesh.userData.solid = solid;
-      entry.node.add(mesh);
+      holder.add(mesh);
       filled.push(mesh);
       const lines = new THREE.LineSegments(new THREE.EdgesGeometry(shape, 24), whiteLine);
-      entry.node.add(lines);
+      holder.add(lines);
       lined.push(lines);
     });
-    const box = new THREE.Box3().setFromObject(entry.node);
-    entry.anchor = box.getCenter(new THREE.Vector3());
-    entry.anchor.y = box.max.y;
-    const tag = document.createElement('span');
-    tag.className = 'callout';
-    tag.textContent = entry.label;
-    tag.hidden = true;
-    stage.appendChild(tag);
-    entry.tag = tag;
   });
 
   // A patch of the thigh curve, for the worn view
@@ -301,6 +310,7 @@ const MODEL = /*DATA*/;
 
   let view = 'assembled';
   let style = 'lines';
+  let holsterShape = 'plain';
   let goal = pose(view);
   const now = { spin: 0, at: goal.at.clone(), explode: 0, leg: 0 };
   let easingCamera = true;
@@ -319,10 +329,26 @@ const MODEL = /*DATA*/;
     Object.keys(GROUPS).forEach(function (group) {
       GROUPS[group].node.visible = Boolean(GROUPS[group].only) === (name === 'fit');
     });
-    lede.textContent = VIEWS[name].text;
+    describe();
     if (!fromHash) {
       try { history.replaceState(null, '', '#' + name); } catch (error) { /* the address can't change here, and that's fine */ }
     }
+  }
+
+  function describe() {
+    lede.textContent = VIEWS[view].text + (view === 'fit' ? '' : SHAPES[holsterShape].note);
+  }
+
+  function setShape(name) {
+    holsterShape = name;
+    press('h-', name, ['plain', 'faceted']);
+    Object.keys(shapeNodes).forEach(function (key) {
+      shapeNodes[key].forEach(function (node) { node.visible = key === name; });
+    });
+    document.getElementById('size').textContent = MODEL.facts[name].size;
+    document.getElementById('grams').textContent = 'about ' + MODEL.facts[name].grams + ' g of PETG';
+    describe();
+    try { localStorage.setItem('holster-shape', name); } catch (error) { /* nowhere to remember it, and that's fine */ }
   }
 
   function setStyle(name) {
@@ -337,6 +363,9 @@ const MODEL = /*DATA*/;
   });
   ['lines', 'solid'].forEach(function (name) {
     document.getElementById('s-' + name).addEventListener('click', function () { setStyle(name); });
+  });
+  ['plain', 'faceted'].forEach(function (name) {
+    document.getElementById('h-' + name).addEventListener('click', function () { setShape(name); });
   });
   window.addEventListener('hashchange', function () {
     const name = location.hash.slice(1);
@@ -356,6 +385,9 @@ const MODEL = /*DATA*/;
   resize();
 
   const start = location.hash.slice(1);
+  let remembered = null;
+  try { remembered = localStorage.getItem('holster-shape'); } catch (error) { /* start plain */ }
+  setShape(SHAPES[remembered] ? remembered : 'plain');
   setView(VIEWS[start] ? start : 'assembled', true);
   setStyle('lines');
   camera.position.copy(goal.eye);
@@ -389,17 +421,6 @@ const MODEL = /*DATA*/;
       place.copy(edgePoint).project(camera);
       edgeTag.style.transform = 'translate(' + Math.round(Math.max(6, (place.x * 0.5 + 0.5) * stage.clientWidth - edgeTag.offsetWidth / 2)) + 'px,' + Math.round((-place.y * 0.5 + 0.5) * stage.clientHeight - 30) + 'px)';
     }
-    const labels = view === 'exploded' && now.explode > 0.9;
-    Object.keys(GROUPS).forEach(function (name) {
-      const entry = GROUPS[name];
-      entry.tag.hidden = !labels || entry.only === true;
-      if (entry.tag.hidden) return;
-      place.copy(entry.anchor).applyMatrix4(entry.node.matrixWorld).project(camera);
-      const x = (place.x * 0.5 + 0.5) * stage.clientWidth;
-      const y = (-place.y * 0.5 + 0.5) * stage.clientHeight;
-      const left = Math.max(6, Math.min(x - entry.tag.offsetWidth / 2, stage.clientWidth - entry.tag.offsetWidth - 6));
-      entry.tag.style.transform = 'translate(' + Math.round(left) + 'px,' + Math.round(y - 30) + 'px)';
-    });
   }
   frame();
 })();

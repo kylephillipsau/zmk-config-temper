@@ -200,6 +200,14 @@ To change what the screens show, edit `art/screens.py`, then run `uv run art/scr
 writes the firmware's images and icons in `boards/shields/nice_view_legend/widgets/` and the images
 above. Then build and flash both halves.
 
+## Thigh holster
+
+![The faceted holster pulled apart in a line: the keyboard, its screws, the holster's top and back, the clip and its steel spine](docs/holster/exploded.jpg)
+
+A 3D-printed holster wears each half on a thigh, clipped into a front pocket, and the keyboard lifts
+straight out for desk use. The parts, how to print them and how they go together are in
+[case/README.md](case/README.md).
+
 ## Known gaps
 
 These are still missing, and they're the next things to sort out:
