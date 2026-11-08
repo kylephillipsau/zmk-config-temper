@@ -2,10 +2,14 @@ manifest:
   remotes:
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
+    # cormoran's fork of ZMK v0.3 adds split relay events, which carry the active layer from the
+    # left half to the right half's screen. Pinned to the commit the Sofle builds with.
+    - name: cormoran
+      url-base: https://github.com/cormoran
   projects:
     - name: zmk
-      remote: zmkfirmware
-      revision: v0.3
+      remote: cormoran
+      revision: 4493783ef88ce2e653bf8217c92ee17140df71e3 # v0.3-branch+dya
       import: app/west.yml
   self:
     path: config

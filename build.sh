@@ -12,7 +12,7 @@ REPO="$(cd "$(dirname "$0")" && pwd)"
 IMAGE="zmkfirmware/zmk-build-arm:3.5-branch"
 VOLUME="zmk-temper-ws"
 BOARD="nice_nano_v2"
-DISPLAY_SHIELD="${DISPLAY_SHIELD:-nice_view_adapter nice_view}"
+DISPLAY_SHIELD="${DISPLAY_SHIELD:-nice_view_adapter nice_view_legend}"
 
 run() {
   docker run --rm \

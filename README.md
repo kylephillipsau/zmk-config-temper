@@ -153,6 +153,53 @@ Soft off is for wearing or carrying the keyboard. It turns off both halves at on
 outer thumbs can wake them, so stray presses on the other keys do nothing. Wake each half with its
 own outer thumb. If a half won't wake, unplug USB and turn its power switch off and on.
 
+## Screens
+
+The nice!view screens are optional. The same firmware runs with or without them.
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screens/left.png" width="150" alt="Left screen: both batteries, the BASE layer, Bluetooth slots 0 to 4 with slot 0 in use, the Cmd, Option, Ctrl, Shift and Caps Lock badges, and the combos"></td>
+    <td align="center"><img src="docs/screens/right-base.png" width="150" alt="Right screen on Base: the name Short Temper, a drawing of the board, and which thumbs to hold for NAV, SYM, NUM and SYSTEM"></td>
+    <td align="center"><img src="docs/screens/right-num.png" width="150" alt="NUM held: Q to P are 1 to 0, A to apostrophe are F1 to F10, Z and X are F11 and F12, then mute, previous, play, next and volume"></td>
+  </tr>
+  <tr>
+    <td align="center">Left</td>
+    <td align="center">Right, on Base</td>
+    <td align="center">NUM held</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screens/right-sym.png" width="150" alt="SYM held: the symbols on the top row, brackets, backtick, backslash and semicolon on the home row, braces, tilde, pipe and colon on the bottom row, Delete on D, and Bluetooth slots 0 to 4 on V, C, X, Z and A"></td>
+    <td align="center"><img src="docs/screens/right-nav.png" width="150" alt="NAV held: arrows on IJKL, Page Up and Down, Home, End, Backspace, Esc and Tab, and Ctrl, Option, Cmd and Shift on A, S, D and F"></td>
+    <td align="center"><img src="docs/screens/right-system.png" width="150" alt="SYSTEM held: USB or Bluetooth, clear one slot, clear all, soft off held for 2 seconds, and the bootloader for each half"></td>
+  </tr>
+  <tr>
+    <td align="center">SYM held</td>
+    <td align="center">NAV held</td>
+    <td align="center">SYSTEM held</td>
+  </tr>
+</table>
+
+- **Left:** battery for each half, the layer, the five Bluetooth slots, held modifiers, Caps Lock
+  and the combos. A filled slot is in use, a double outline is selected but not connected, an
+  outline is connected, and a dashed outline is paired.
+- **Right:** on Base, which thumbs open each layer. While you hold a layer, its keys. The left half
+  sends the layer to the right half, which needs the ZMK fork in `config/west.yml`.
+
+**Battery:** nothing moves on the screens. They only redraw when something on them changes: a layer,
+a modifier, a battery level or a connection. ZMK's display timer runs 100 times a second while
+you type, and stops after 30 seconds without a key on that half. The stock nice!view settings keep
+it running all the time. A screen holds its picture with almost no power.
+
+**Fitting or removing a screen:** turn that half's switch off and unplug USB first. Pins pushed in
+at an angle can touch their neighbours while powered. A screen also starts out full of random
+pixels, and the keyboard only clears it when it starts up. The keyboard can't tell whether a screen
+is fitted, because it only sends to the screen, so it draws either way.
+
+To change what the screens show, edit `art/screens.py`, then run `uv run art/screens.py`. It
+writes the firmware's images and icons in `boards/shields/nice_view_legend/widgets/` and the images
+above. Then build and flash both halves.
+
 ## Known gaps
 
 These are still missing, and they're the next things to sort out:
@@ -187,6 +234,10 @@ These are still missing, and they're the next things to sort out:
 - **Diagrams:** drawn from `config/temper.keymap` and the real PCB. The seller's workflow drew
   `boards/shields/temper/temper.keymap`, which the firmware doesn't use, and `config/temper.json`
   has the wrong stagger.
+- **Screens:** a layer legend on the right and a status screen on the left, in place of the stock
+  nice!view screens. See [Screens](#screens).
+- **ZMK:** built from [cormoran's fork](https://github.com/cormoran/zmk) of v0.3, for the split relay
+  events that carry the layer to the right half.
 - **Local tooling:** `build.sh` and `flash.sh`.
 
 ## Building and flashing
@@ -253,3 +304,7 @@ uv run keymap_img/draw.py keymap_img/blueprint.yaml
   Open Hardware Licence. The drawings use its key positions and board outline.
 - [keymap-drawer](https://github.com/caksoylar/keymap-drawer) parses the keymap.
 - [osifont](https://github.com/hikikomori82/osifont) is the lettering on the drawings.
+- The screens use [Silkscreen](https://github.com/googlefonts/silkscreen) and
+  [Jersey 10](https://github.com/scfried/soft-type-jersey), under the SIL Open Font License
+  (`art/fonts/LICENSES`), and come from the screens on
+  [Kyles Sofle](https://github.com/kylephillipsau/zmk-config-kyles-sofle).
