@@ -8,8 +8,8 @@
 
 Writes:
   - boards/shields/nice_view_legend/widgets/legend_art.c: the right screen's legends (the 68 x 140
-    below the battery and link bar, which the firmware draws itself) and the left screen's combos
-    card (the 68 x 92 below the status area)
+    below the battery and link bar, which the firmware draws itself) and the left screen's cards
+    (the 68 x 92 below the status area): the combos, and the left hand's keys on each layer
   - boards/shields/nice_view_legend/widgets/status_glyphs.h: the left screen's icons
   - docs/screens/*.png: each screen in black and white, for the README
 
@@ -161,6 +161,8 @@ PUNCT = {
     '|': glyph(["##", "##", "##", "##", "##", "##"]),
     '~': glyph([".....", ".##.#", "#.##.", ".....", "....."]),
     '&': glyph([".#..", "#.#.", ".#..", "#.##", ".##."]),  # Silkscreen's looks like $
+    '^': glyph(["..#..", ".###.", "##.##", ".....", "....."]),  # Silkscreen's is a speck
+    '4': glyph(["##.##", "##.##", "#####", "...##", "...##"]),  # Silkscreen's reads as a blob
 }
 
 
@@ -214,12 +216,14 @@ def header(d, name):
     text(d, (None, 24), name, silk_b, 'c', fill=0)
 
 
-def thumbs(img, d, x, y, held, size=4, gap=1, split=4):
-    """The six thumb keys, left outer to right outer, with the held ones filled."""
+def thumbs(img, d, x, y, held, w=3, h=5, gap=1, split=4):
+    """The six thumb keys, left outer to right outer, on one baseline: a held key is a solid w x h
+    block and a free one only its 1 px base. An outline beside a filled square differs by a pixel
+    or two at this size, which can't be read on the panel; these differ by most of their ink."""
     for i in range(6):
-        bx = x + i * (size + gap) + (split if i >= 3 else 0)
-        box = [bx, y, bx + size - 1, y + size - 1]
-        d.rectangle(box, fill=1) if i in held else d.rectangle(box, outline=1)
+        bx = x + i * (w + gap) + (split if i >= 3 else 0)
+        top = y if i in held else y + h - 1
+        d.rectangle([bx, top, bx + w - 1, y + h - 1], fill=1)
 
 
 def mini_temper(img, d, y):
@@ -247,7 +251,7 @@ def legend_base():
     # which thumbs to hold for each layer
     y = 98
     for held, name in (((0,), 'NAV'), ((2,), 'SYM'), ((3,), 'NUM'), ((2, 3), 'SYSTEM')):
-        thumbs(img, d, 1, y - 1, held, size=3, split=3)
+        thumbs(img, d, 1, y, held)  # as tall as the capitals, and clear of SYSTEM
         label(img, d, W - 1 - label_w(d, name, silk), y, name, silk)
         y += 11
     d.rectangle([0, 146, W - 1, 159], outline=1)
@@ -255,105 +259,187 @@ def legend_base():
     return img
 
 
-def layer_page(name, held):
+# ---------------------------------------------------------------------------- each layer, key by key
+#
+# While a layer is held, each screen shows its own hand's keys in their places on the board: the
+# right screen under its header, the left screen below its status area. Columns are 13 px apart,
+# the screen's width over five, and rows 15 px, with the board's column stagger and thumb drop at
+# that scale. Neighbouring keys share a 1 px border, leaving 12 x 14 px inside each.
+
+KEY_W, KEY_H = 13, 15
+BOARD = yaml.safe_load(open(os.path.join(REPO, 'keymap_img', 'temper-board.yaml')))['keys']
+
+# 3 x 5 capitals and digits, for legends of two or three characters. 1 is narrower, so F10-F12 fit.
+F35 = {k: glyph(v.split()) for k, v in {
+    'A': '.#. #.# ### #.# #.#', 'B': '##. #.# ##. #.# ##.', 'C': '.## #.. #.. #.. .##',
+    'D': '##. #.# #.# #.# ##.', 'E': '### #.. ##. #.. ###', 'F': '### #.. ##. #.. #..',
+    'G': '.## #.. #.# #.# .##', 'L': '#.. #.. #.. #.. ###', 'P': '##. #.# ##. #.. #..',
+    'R': '##. #.# ##. #.# #.#', 'S': '.## #.. .#. ..# ##.', 'T': '### .#. .#. .#. .#.',
+    'U': '#.# #.# #.# #.# ###', '0': '### #.# #.# #.# ###', '1': '.# ## .# .# .#',
+    '2': '##. ..# .#. #.. ###', '3': '##. ..# .#. ..# ##.', '4': '#.# #.# ### ..# ..#',
+    '5': '### #.. ##. ..# ##.', '6': '.## #.. ### #.# ###', '7': '### ..# .#. .#. .#.',
+    '8': '### #.# ### #.# ###', '9': '### #.# ### ..# ##.',
+}.items()}
+
+# Media keys: a speaker with its mark, and transport controls
+MUTE = glyph(["...#....", "..##....", "####.#.#", "####..#.", "####.#.#", "..##....", "...#...."])
+VOL_UP = glyph(["...#....", "..##....", "####..#.", "####.###", "####..#.", "..##....", "...#...."])
+VOL_DN = glyph(["...#....", "..##....", "####....", "####.###", "####....", "..##....", "...#...."])
+PREV = glyph(["#..#..#", "#.##.##", "#######", "#.##.##", "#..#..#"])
+NEXT = glyph(["#..#..#", "##.##.#", "#######", "##.##.#", "#..#..#"])
+PLAY = glyph(["#...#.#", "##..#.#", "###.#.#", "##..#.#", "#...#.#"])
+# Backspace and forward Delete, as on a Mac
+BKSP = glyph(["...######", "..#.....#", ".#..#.#.#", "#....#..#", ".#..#.#.#", "..#.....#",
+              "...######"])
+DEL = [row[::-1] for row in BKSP]
+# Home and End: to the start and end of the line
+HOME = glyph(["#..#...", "#.##...", "#######", "#.##...", "#..#..."])
+END = [row[::-1] for row in HOME]
+TRI_U = glyph(["..#..", ".###.", "#####"])
+TRI_D = TRI_U[::-1]
+POWER = glyph(["....#....", ".##.#.##.", "#...#...#", "#...#...#", "#.......#", "#.......#",
+               ".#.....#.", "..#####.."])
+FLASH = glyph(["..###..", "..###..", "#######", ".#####.", "..###..", "...#...", ".......",
+               "#######"])
+
+N = None  # a key that does nothing on the layer
+# Each hand's keys, in keymap order: three rows of five, then the thumbs, which these leave out.
+# Thumbs are counted from the left on each hand: (outer, middle, inner) on the left hand and
+# (inner, middle, outer) on the right. HELD is the thumb, or thumbs, that hold each layer.
+KEYS = {
+    'NUM': {
+        'L': ['1', '2', '3', '4', '5', 'F1', 'F2', 'F3', 'F4', 'F5', 'F11', 'F12', N, N, MUTE],
+        'R': ['6', '7', '8', '9', '0', 'F6', 'F7', 'F8', 'F9', 'F10',
+              PREV, PLAY, NEXT, VOL_DN, VOL_UP],
+    },
+    'SYM': {
+        'L': ['!', '@', '#', '$', '%', ('BT', '4'), N, DEL, N, N,
+              ('BT', '3'), ('BT', '2'), ('BT', '1'), ('BT', '0'), N],
+        'R': ['^', '&', '*', '(', ')', '[', ']', '`', '\\', ';', '{', '}', '~', '|', ':'],
+    },
+    'NAV': {
+        'L': ['ESC', 'TAB', N, N, N, CTRL, OPT, CMD, SHIFT, N, N, N, N, N, N],
+        'R': [('PG', TRI_U), HOME, ARROW_U, END, BKSP,
+              ('PG', TRI_D), rot(ARROW_U, 3), rot(ARROW_U, 2), rot(ARROW_U, 1), N,
+              N, N, N, N, N],
+    },
+    'SYSTEM': {
+        'L': [N, N, N, N, ('CLR', 'BT'), N, N, N, N, ('CLR', 'ALL'), N, N, N, N, FLASH],
+        'R': [('USB', 'BT'), N, N, POWER, N, N, N, N, N, N, FLASH, N, N, N, N],
+    },
+}
+HELD = {'NUM': {'R': (0,)}, 'SYM': {'L': (2,)}, 'NAV': {'L': (0,)}, 'SYSTEM': {'L': (2,), 'R': (0,)}}
+
+
+def key_places(hand):
+    """Left edge, top and width of each of one hand's 18 keys, in keymap order, on a 68 px wide
+    screen. The outer column takes the spare pixel at the screen's edge, so ESC fits."""
+    top = min(k['y'] for k in BOARD[:10])
+    down = KEY_H / 17  # px per mm down the board, where rows are 17 mm apart
+    cols = range(5) if hand == 'L' else range(5, 10)
+    outer = 0 if hand == 'L' else 4
+    places = []
+    for r in range(3):
+        for i, c in enumerate(cols):
+            x = 0 if (hand, i) == ('L', 0) else 1 + i * KEY_W
+            places.append((x, round((BOARD[c]['y'] - top) * down) + r * KEY_H,
+                           KEY_W + (i == outer)))
+    # On the board the thumbs fan out past the inner column. Here they sit under the three inner
+    # columns, keeping their drop.
+    thumbs = BOARD[30:33] if hand == 'L' else BOARD[33:36]
+    places += [(1 + (i + 2 if hand == 'L' else i) * KEY_W, round((k['y'] - top) * down), KEY_W)
+               for i, k in enumerate(thumbs)]
+    return places
+
+
+def as_glyph(d, legend):
+    """A legend as rows of pixels, and the height to centre it by (a descender doesn't count)."""
+    if isinstance(legend, tuple):  # two lines, 2 px apart
+        parts = [as_glyph(d, part) for part in legend]
+        w = max(len(g[0]) for g, _ in parts)
+        rows = []
+        for i, (g, h) in enumerate(parts):
+            pad = (w - len(g[0]) + 1) // 2
+            rows += [[False] * pad + r + [False] * (w - len(r) - pad) for r in g[:h]]
+            if i < len(parts) - 1:
+                rows += [[False] * w] * 2
+        return rows, len(rows)
+    if isinstance(legend, list):
+        return legend, len(legend)
+    if len(legend) == 1:  # Silkscreen Bold, or one of PUNCT
+        probe = Image.new('1', (16, 10), 0)
+        w = label(probe, ImageDraw.Draw(probe), 0, 2, legend)
+        px = probe.load()
+        return [[bool(px[x, y]) for x in range(w)] for y in range(2, 8)], 5
+    rows = [[] for _ in range(5)]
+    for i, ch in enumerate(legend):
+        for r, g in zip(rows, F35[ch]):
+            r += ([False] if i else []) + g
+    return rows, 5
+
+
+def hand_keys(img, d, y0, hand, legends, held=()):
+    """One hand's keys from row y0: outlines with legends, a dot for a key that does nothing, and
+    the thumbs, with the held ones solid. Returns the row below the lowest key."""
+    places = [(x, y0 + y, w) for x, y, w in key_places(hand)]
+    for i, (x, y, w) in enumerate(places):
+        box = [x, y, x + w, y + KEY_H]
+        if i >= 15 and i - 15 in held:
+            d.rectangle(box, fill=1)
+        elif i >= 15 or legends[i] is not None:
+            d.rectangle(box, outline=1)
+    for i, (x, y, w) in enumerate(places[:15]):
+        if legends[i] is None:
+            d.point([(x + w // 2, y + KEY_H // 2)], fill=1)
+            continue
+        g, h = as_glyph(d, legends[i])
+        inside, gw = w - 1, len(g[0])
+        assert gw <= inside and h <= KEY_H - 1, legends[i]
+        # When it can't be centred exactly, the odd pixel goes beside the edge with more ink, so
+        # the lighter edge is the one that meets the border.
+        left_ink = sum(r[0] for r in g)
+        right_ink = sum(r[-1] for r in g)
+        gx = (inside - gw + (left_ink >= right_ink)) // 2
+        blit(img, g, x + 1 + gx, y + 1 + (KEY_H - h) // 2)
+    return max(y for _, y, _ in places) + KEY_H + 1
+
+
+def notes(img, d, y, lines):
+    """Icon and text lines under the keys, saying what an icon does."""
+    for icon, words in lines:
+        if icon is not None:
+            blit(img, icon, 1, y - (len(icon) - 5) // 2)
+        label(img, d, 14, y, words, silk)
+        y += 11
+    return y
+
+
+def legend_layer(name):
+    """The right screen while a layer is held: its name, then the right hand's keys."""
     img, d = new()
     status_bar(img, d)
     header(d, name)
-    thumbs(img, d, 1, 150, held)
-    label(img, d, W - 1 - label_w(d, 'HELD', silk), 150, 'HELD', silk)
-    return img, d
+    bottom = hand_keys(img, d, 38, 'R', KEYS[name]['R'], HELD[name].get('R', ()))
+    if name == 'SYSTEM':
+        notes(img, d, bottom + 7, [(POWER, 'SOFT OFF'), (None, 'HOLD 2 SEC'),
+                                    (FLASH, 'FLASH')])
+    return img
 
 
 def legend_num():
-    """NUM in config/temper.keymap: hold the right inner thumb."""
-    img, d = layer_page('NUM', (3,))
-    rows(img, d, 38, [
-        ('Q-P', '1-0'),
-        ("A-'", 'F1-F10'),
-        ('Z X', 'F11 F12'),
-    ])
-    d.line([(0, 67), (W - 1, 67)], fill=1)
-    rows(img, d, 72, [
-        ('B', 'MUTE'),
-        ('N', 'PREV'),
-        ('M', 'PLAY'),
-        (',', 'NEXT'),
-        ('.', 'VOL -'),
-        ('/', 'VOL +'),
-    ])
-    return img
+    return legend_layer('NUM')
 
 
 def legend_sym():
-    """SYM in config/temper.keymap: hold the left inner thumb."""
-    img, d = layer_page('SYM', (2,))
-    rows(img, d, 38, [
-        ('Q-T', '! @ # $ %'),
-        ('Y-P', '^ & * ( )'),
-        ("H-'", '[ ] ` \\ ;'),
-        ('N-/', '{ } ~ | :'),
-        ('D', 'DELETE'),
-    ])
-    d.line([(0, 88), (W - 1, 88)], fill=1)
-    # Bluetooth slots 0-4 and their keys
-    blit(img, BT, 1, 95)
-    for i, key in enumerate('VCXZA'):
-        x = 12 + i * 11
-        d.rectangle([x, 93, x + 9, 103], outline=1)
-        text(d, (x + 5, 96), str(i), silk_b, 'c')
-        label(img, d, x + 5 - label_w(d, key) // 2, 107, key)
-    return img
-
-
-def arrow_cluster(img, d, x, y):
-    """Inverted-T arrow keys, 4 boxes of 11 px."""
-    s = 11
-    for bx, by, r in [(x + s, y, 0), (x, y + s + 1, 3), (x + s, y + s + 1, 2), (x + 2 * s, y + s + 1, 1)]:
-        d.rectangle([bx, by, bx + s - 1, by + s - 1], outline=1)
-        blit(img, rot(ARROW_U, r), bx + 2, by + 2)
+    return legend_layer('SYM')
 
 
 def legend_nav():
-    """NAV in config/temper.keymap: hold the left outer thumb."""
-    img, d = layer_page('NAV', (0,))
-    arrow_cluster(img, d, 0, 37)
-    label(img, d, W - 1 - label_w(d, 'ON', silk), 43, 'ON', silk)
-    label(img, d, W - 1 - label_w(d, 'IJKL'), 52, 'IJKL')
-    rows(img, d, 65, [
-        ('Y H', 'PG UP DN'),
-        ('U O', 'HOME END'),
-        ('P', 'BKSP'),
-        ('Q W', 'ESC TAB'),
-    ])
-    d.line([(0, 104), (W - 1, 104)], fill=1)
-    # A S D F hold Ctrl, Option, Cmd, Shift
-    for i, (key, g) in enumerate(zip('ASDF', (CTRL, OPT, CMD, SHIFT))):
-        x = 1 + i * 17
-        d.rectangle([x, 109, x + 14, 122], outline=1)
-        blit(img, g, x + (15 - len(g[0])) // 2, 109 + (14 - len(g)) // 2)
-        label(img, d, x + 7 - label_w(d, key) // 2, 126, key)
-    return img
+    return legend_layer('NAV')
 
 
 def legend_system():
-    """SYSTEM in config/temper.keymap: hold both inner thumbs."""
-    img, d = layer_page('SYSTEM', (2, 3))
-    rows(img, d, 38, [
-        ('Y', 'USB / BT'),
-        ('T', 'CLEAR BT'),
-        ('G', 'CLEAR ALL'),
-    ], step=11)
-    d.line([(0, 70), (W - 1, 70)], fill=1)
-    rows(img, d, 75, [
-        ('O', 'SOFT OFF'),
-    ])
-    label(img, d, W - 1 - label_w(d, 'HOLD 2 SEC', silk), 84, 'HOLD 2 SEC', silk)
-    d.line([(0, 95), (W - 1, 95)], fill=1)
-    rows(img, d, 100, [
-        ('B', 'FLASH L'),
-        ('N', 'FLASH R'),
-    ], step=11)
-    return img
+    return legend_layer('SYSTEM')
 
 
 # ------------------------------------------------------------------------------- the left screen
@@ -375,14 +461,16 @@ def lv_text(img, font, x, w, cap_y, align, s, fill=1):
     f.draw(img, x, cap_y - f.cap_top(), s, fill)
 
 
-def left_status(img, d, layer='BASE', l=87, r=92, charging=False, usb=False, active=0,
-                connected=(0,), bonded=(0, 1), held=(), caps=False):
+def left_status(img, d, layer='BASE', l=87, r=92, charging=False, r_charging=False, usb=False,
+                active=0, connected=(0,), bonded=(0, 1), held=(), caps=False):
     """Portrait rows 0-67: what draw_status() in widgets/status.c draws."""
-    for x, name, level, chg in ((0, 'L', l, charging), (36, 'R', r, False)):
+    for x, name, level, chg in ((0, 'L', l, charging), (36, 'R', r, r_charging)):
         if chg:
+            # A charging half reads its battery as full whatever its charge, so show no level.
             blit(img, BOLT, x, 0)
-        else:
-            lv_text(img, 'silkscreen_bold_8', x, 31, 0, 'l', name)
+            lv_text(img, 'silkscreen_8', x, 31, 0, 'r', 'CHG')
+            continue
+        lv_text(img, 'silkscreen_bold_8', x, 31, 0, 'l', name)
         lv_text(img, 'silkscreen_8', x, 31, 0, 'r', '--' if level < 0 else f'{level}%')
         for i in range(10):
             on = level >= 0 and i < (level + 5) // 10
@@ -432,10 +520,17 @@ def left_combos(img, d):
     ], step=9)
 
 
-def left_screen(**kw):
+def left_screen(layer='BASE', **kw):
+    """The whole left screen: on Base the combos card, and while a layer is held the left hand's
+    keys in its place."""
     img, d = new()
-    left_status(img, d, **kw)
-    left_combos(img, d)
+    left_status(img, d, layer=layer, **kw)
+    if layer == 'BASE':
+        left_combos(img, d)
+    else:
+        bottom = hand_keys(img, d, 70, 'L', KEYS[layer]['L'], HELD[layer].get('L', ()))
+        if layer == 'SYSTEM':
+            notes(img, d, bottom + 4, [(FLASH, 'FLASH')])
     return img
 
 
@@ -448,6 +543,11 @@ LEGENDS = [
     ('legend_nav', legend_nav, 20, 'NAV: arrows, navigation and modifiers'),
     ('legend_system', legend_system, 20, 'SYSTEM: Bluetooth, USB, soft off and the bootloaders'),
     ('left_combos', left_screen, 68, 'Left screen below the status area: the combos'),
+    ('left_num', lambda: left_screen('NUM'), 68, 'Left screen on NUM: the left hand\'s keys'),
+    ('left_sym', lambda: left_screen('SYM'), 68, 'Left screen on SYM: the left hand\'s keys'),
+    ('left_nav', lambda: left_screen('NAV'), 68, 'Left screen on NAV: the left hand\'s keys'),
+    ('left_system', lambda: left_screen('SYSTEM'), 68,
+     'Left screen on SYSTEM: the left hand\'s keys'),
 ]
 
 
@@ -582,6 +682,10 @@ def write_images():
     os.makedirs(out, exist_ok=True)
     screens = {
         'left.png': left_screen(),
+        'left-num.png': left_screen('NUM'),
+        'left-sym.png': left_screen('SYM'),
+        'left-nav.png': left_screen('NAV'),
+        'left-system.png': left_screen('SYSTEM'),
         'right-base.png': legend_base(),
         'right-num.png': legend_num(),
         'right-sym.png': legend_sym(),

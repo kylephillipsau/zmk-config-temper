@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: MIT
  *
  * Left (central) screen: a status area (both batteries, layer, Bluetooth slots, held modifiers and
- * Caps Lock) above a fixed card of the base layer's combos. The layout mirrors left_screen() in
- * art/screens.py, and the fonts and icons are generated from the same sources, so the mockups
- * match the device.
+ * Caps Lock) above a card: the base layer's combos, or while a layer is held, the left hand's keys.
+ * The layout mirrors left_screen() in art/screens.py, and the fonts and icons are generated from
+ * the same sources, so the mockups match the device.
  *
  * The status area is a 68x68 canvas covering portrait rows 0-67, drawn upright and then rotated
- * into the panel's landscape orientation. The card below it is a prebuilt image, so nothing but
- * the status area is ever redrawn, and only when something in it changes.
+ * into the panel's landscape orientation. The cards below it are prebuilt images, swapped when the
+ * layer changes, so nothing is drawn at runtime but the status area, and only when it changes.
  */
 
 #include <stdio.h>
@@ -26,6 +26,7 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include <zmk/battery.h>
 #include <zmk/display.h>
 #include "draw.h"
+#include "peripheral_charging.h"
 #include "status.h"
 #include "status_glyphs.h"
 #include <zmk/events/usb_conn_state_changed.h>
@@ -51,6 +52,10 @@ LV_FONT_DECLARE(lv_font_silkscreen_8);
 LV_FONT_DECLARE(lv_font_silkscreen_bold_8);
 LV_FONT_DECLARE(lv_font_jersey_1x);
 LV_IMG_DECLARE(left_combos);
+LV_IMG_DECLARE(left_num);
+LV_IMG_DECLARE(left_sym);
+LV_IMG_DECLARE(left_nav);
+LV_IMG_DECLARE(left_system);
 
 #define SCREEN_W 68
 
@@ -75,6 +80,10 @@ struct layer_status_state {
 
 struct peripheral_battery_state {
     int16_t level;
+};
+
+struct peripheral_charging_state {
+    bool charging;
 };
 
 struct mods_state {
@@ -104,10 +113,13 @@ static void draw_battery_column(const struct frame *f, int x, char label, int le
     char text[12] = {label, '\0'};
 
     if (charging) {
-        draw_glyph(f, x, 0, &glyph_bolt, ink); // replaces the letter, leaving room for "100%"
-    } else {
-        draw_text(f, &lv_font_silkscreen_bold_8, x, 31, 0, LV_TEXT_ALIGN_LEFT, ink, text);
+        // A charging half reads its battery as full whatever its charge, so show no level. The
+        // column's place says which half it is.
+        draw_glyph(f, x, 0, &glyph_bolt, ink);
+        draw_text(f, &lv_font_silkscreen_8, x, 31, 0, LV_TEXT_ALIGN_RIGHT, ink, "CHG");
+        return;
     }
+    draw_text(f, &lv_font_silkscreen_bold_8, x, 31, 0, LV_TEXT_ALIGN_LEFT, ink, text);
 
     if (level < 0) {
         strcpy(text, "--");
@@ -188,7 +200,7 @@ static void draw_status(lv_obj_t *widget, struct zmk_widget_status *w) {
     fill(&f, 0, 0, CANVAS_SIZE, CANVAS_SIZE, paper);
 
     draw_battery_column(&f, 0, 'L', state->battery, state->charging);
-    draw_battery_column(&f, 36, 'R', state->peripheral_battery, false);
+    draw_battery_column(&f, 36, 'R', state->peripheral_battery, state->peripheral_charging);
 
     if (state->layer_label != NULL && state->layer_label[0] != '\0') {
         snprintf(layer, sizeof(layer), "%s", state->layer_label);
@@ -217,11 +229,15 @@ static void draw_status(lv_obj_t *widget, struct zmk_widget_status *w) {
 static void battery_status_update_cb(struct battery_status_state state) {
     struct zmk_widget_status *widget;
     SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) {
+        bool was_charging = widget->state.charging;
 #if IS_ENABLED(CONFIG_USB_DEVICE_STACK)
         widget->state.charging = state.usb_present;
 #endif
         widget->state.battery = state.level;
         draw_status(widget->obj, widget);
+        if (widget->state.charging != was_charging) {
+            lv_refr_now(NULL); // as in peripheral_charging_update_cb
+        }
     }
 }
 
@@ -275,6 +291,35 @@ ZMK_DISPLAY_WIDGET_LISTENER(widget_peripheral_battery, struct peripheral_battery
 ZMK_SUBSCRIPTION(widget_peripheral_battery, zmk_peripheral_battery_state_changed);
 #endif
 
+// The right half sends this when it's plugged in or out, and again each time it reconnects
+// (widgets/peripheral_charging.c).
+static void peripheral_charging_update_cb(struct peripheral_charging_state state) {
+    struct zmk_widget_status *widget;
+    SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) {
+        if (widget->state.peripheral_charging != state.charging) {
+            widget->state.peripheral_charging = state.charging;
+            draw_status(widget->obj, widget);
+            // Plugging the right half in isn't a key press here, so the display timer may be
+            // stopped (CONFIG_ZMK_DISPLAY_BLANK_ON_IDLE). Draw it now.
+            lv_refr_now(NULL);
+        }
+    }
+}
+
+static struct peripheral_charging_state peripheral_charging_get_state(const zmk_event_t *eh) {
+    static bool charging = false;
+    const struct zmk_peripheral_charging_changed *ev =
+        eh ? as_zmk_peripheral_charging_changed(eh) : NULL;
+    if (ev != NULL) {
+        charging = ev->charging;
+    }
+    return (struct peripheral_charging_state){.charging = charging};
+}
+
+ZMK_DISPLAY_WIDGET_LISTENER(widget_peripheral_charging, struct peripheral_charging_state,
+                            peripheral_charging_update_cb, peripheral_charging_get_state)
+ZMK_SUBSCRIPTION(widget_peripheral_charging, zmk_peripheral_charging_changed);
+
 static void output_status_update_cb(struct output_status_state state) {
     struct zmk_widget_status *widget;
     SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) {
@@ -315,12 +360,35 @@ ZMK_SUBSCRIPTION(widget_output_status, zmk_usb_conn_state_changed);
 ZMK_SUBSCRIPTION(widget_output_status, zmk_ble_active_profile_changed);
 #endif
 
+// Below the status area: the combos on Base, and the left hand's keys while a layer is held. The
+// layer numbers follow config/temper.keymap, as legend_for_layer() in peripheral_status.c does.
+static const lv_img_dsc_t *card_for_layer(uint8_t layer) {
+    switch (layer) {
+    case 1:
+        return &left_num;
+    case 2:
+        return &left_sym;
+    case 3:
+        return &left_nav;
+    case 4:
+        return &left_system;
+    default:
+        return &left_combos;
+    }
+}
+
 static void layer_status_update_cb(struct layer_status_state state) {
     struct zmk_widget_status *widget;
     SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) {
         widget->state.layer_index = state.index;
         widget->state.layer_label = state.label;
         draw_status(widget->obj, widget);
+
+        lv_obj_t *card = lv_obj_get_child(widget->obj, 1);
+        const lv_img_dsc_t *src = card_for_layer(state.index);
+        if (lv_img_get_src(card) != src) {
+            lv_img_set_src(card, src);
+        }
     }
 }
 
@@ -404,6 +472,7 @@ int zmk_widget_status_init(struct zmk_widget_status *widget, lv_obj_t *parent) {
     sys_slist_append(&widgets, &widget->node);
     widget_battery_status_init();
     widget_peripheral_battery_init();
+    widget_peripheral_charging_init();
     widget_output_status_init();
     widget_layer_status_init();
     widget_mods_init();

@@ -30,6 +30,7 @@ struct status_state {
     uint8_t layer_index;
     const char *layer_label;
     int16_t peripheral_battery; // -1 until the right half reports its level
+    bool peripheral_charging;   // the right half is on USB power
     uint8_t mods;               // held modifier keys, MOD_* bits
     bool caps_lock;             // the computer's Caps Lock light
 #else

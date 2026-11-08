@@ -93,6 +93,7 @@ static void draw_top(lv_obj_t *widget, lv_color_t cbuf[], const struct status_st
 
 static void set_battery_status(struct zmk_widget_status *widget,
                                struct battery_status_state state) {
+    bool was_charging = widget->state.charging;
 #if IS_ENABLED(CONFIG_USB_DEVICE_STACK)
     widget->state.charging = state.usb_present;
 #endif /* IS_ENABLED(CONFIG_USB_DEVICE_STACK) */
@@ -100,6 +101,10 @@ static void set_battery_status(struct zmk_widget_status *widget,
     widget->state.battery = state.level;
 
     draw_top(widget->obj, widget->cbuf, &widget->state);
+    if (widget->state.charging != was_charging) {
+        // Plugging in isn't a key press, so the display timer may be stopped (see set_legend)
+        lv_refr_now(NULL);
+    }
 }
 
 static void battery_status_update_cb(struct battery_status_state state) {

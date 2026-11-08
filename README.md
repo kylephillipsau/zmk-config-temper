@@ -159,32 +159,46 @@ The nice!view screens are optional. The same firmware runs with or without them.
 
 <table>
   <tr>
-    <td align="center"><img src="docs/screens/left.png" width="150" alt="Left screen: both batteries, the BASE layer, Bluetooth slots 0 to 4 with slot 0 in use, the Cmd, Option, Ctrl, Shift and Caps Lock badges, and the combos"></td>
+    <td align="center"><img src="docs/screens/left.png" width="150" alt="Left screen on Base: both batteries, the BASE layer, Bluetooth slots 0 to 4 with slot 0 in use, the Cmd, Option, Ctrl, Shift and Caps Lock badges, and the combos"></td>
     <td align="center"><img src="docs/screens/right-base.png" width="150" alt="Right screen on Base: the name Short Temper, a drawing of the board, and which thumbs to hold for NAV, SYM, NUM and SYSTEM"></td>
-    <td align="center"><img src="docs/screens/right-num.png" width="150" alt="NUM held: Q to P are 1 to 0, A to apostrophe are F1 to F10, Z and X are F11 and F12, then mute, previous, play, next and volume"></td>
+    <td align="center"><img src="docs/screens/left-num.png" width="150" alt="Left screen with NUM held: 1 to 5 on the top row, F1 to F5 on the home row, F11 and F12 on Z and X, and Mute on B"></td>
+    <td align="center"><img src="docs/screens/right-num.png" width="150" alt="Right screen with NUM held: 6 to 0 on the top row, F6 to F10 on the home row, previous, play, next and volume down and up on the bottom row, and the right inner thumb solid"></td>
   </tr>
   <tr>
-    <td align="center">Left</td>
-    <td align="center">Right, on Base</td>
-    <td align="center">NUM held</td>
+    <td align="center" colspan="2">Base</td>
+    <td align="center" colspan="2">NUM held</td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/screens/right-sym.png" width="150" alt="SYM held: the symbols on the top row, brackets, backtick, backslash and semicolon on the home row, braces, tilde, pipe and colon on the bottom row, Delete on D, and Bluetooth slots 0 to 4 on V, C, X, Z and A"></td>
-    <td align="center"><img src="docs/screens/right-nav.png" width="150" alt="NAV held: arrows on IJKL, Page Up and Down, Home, End, Backspace, Esc and Tab, and Ctrl, Option, Cmd and Shift on A, S, D and F"></td>
-    <td align="center"><img src="docs/screens/right-system.png" width="150" alt="SYSTEM held: USB or Bluetooth, clear one slot, clear all, soft off held for 2 seconds, and the bootloader for each half"></td>
+    <td align="center"><img src="docs/screens/left-sym.png" width="150" alt="Left screen with SYM held: ! @ # $ % on the top row, Delete on D, Bluetooth slots 4 on A and 3 to 0 on Z, X, C and V, and the left inner thumb solid"></td>
+    <td align="center"><img src="docs/screens/right-sym.png" width="150" alt="Right screen with SYM held: ^ & * ( ) on the top row, [ ] ` \ ; on the home row, and { } ~ | : on the bottom row"></td>
+    <td align="center"><img src="docs/screens/left-nav.png" width="150" alt="Left screen with NAV held: Esc and Tab on Q and W, Ctrl, Option, Cmd and Shift on A, S, D and F, and the left outer thumb solid"></td>
+    <td align="center"><img src="docs/screens/right-nav.png" width="150" alt="Right screen with NAV held: Page Up, Home, up, End and Backspace on the top row, and Page Down, left, down and right on the home row"></td>
   </tr>
   <tr>
-    <td align="center">SYM held</td>
-    <td align="center">NAV held</td>
-    <td align="center">SYSTEM held</td>
+    <td align="center" colspan="2">SYM held</td>
+    <td align="center" colspan="2">NAV held</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screens/left-system.png" width="150" alt="Left screen with SYSTEM held: clear the Bluetooth slot on T, clear all on G, the left half's bootloader on B, and the left inner thumb solid"></td>
+    <td align="center"><img src="docs/screens/right-system.png" width="150" alt="Right screen with SYSTEM held: USB or Bluetooth on Y, soft off on O, held for 2 seconds, the right half's bootloader on N, and the right inner thumb solid"></td>
+  </tr>
+  <tr>
+    <td align="center" colspan="2">SYSTEM held</td>
   </tr>
 </table>
 
-- **Left:** battery for each half, the layer, the five Bluetooth slots, held modifiers, Caps Lock
-  and the combos. A filled slot is in use, a double outline is selected but not connected, an
-  outline is connected, and a dashed outline is paired.
-- **Right:** on Base, which thumbs open each layer. While you hold a layer, its keys. The left half
-  sends the layer to the right half, which needs the ZMK fork in `config/west.yml`.
+- **Left:** battery for each half, the layer, the five Bluetooth slots, held modifiers and Caps Lock.
+  Below them, the combos on Base, or the left hand's keys while you hold a layer. A filled slot is
+  in use, a double outline is selected but not connected, an outline is connected, and a dashed
+  outline is paired.
+- **Right:** on Base, which thumbs open each layer. While you hold a layer, the right hand's keys.
+  The left half sends the layer to the right half, which needs the ZMK fork in `config/west.yml`.
+- **Keys:** each hand's keys sit where they are on the board, stagger and all. The thumb you're
+  holding is solid, and a key that does nothing on that layer is a dot.
+- **Charging:** while a half is plugged in, its battery shows a bolt instead of a level. The
+  nice!nano measures the battery's voltage, and a charger holds that near full, so a charging half
+  always reads 100%. The right half tells the left half when it's plugged in, so both screens show
+  it. Your computer's Bluetooth battery reading still shows 100% for a charging half.
 
 **Battery:** nothing moves on the screens. They only redraw when something on them changes: a layer,
 a modifier, a battery level or a connection. ZMK's display timer runs 100 times a second while
