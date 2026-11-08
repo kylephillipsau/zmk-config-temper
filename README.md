@@ -335,4 +335,4 @@ uv run keymap_img/draw.py keymap_img/blueprint.yaml
 - The screens use [Silkscreen](https://github.com/googlefonts/silkscreen) and
   [Jersey 10](https://github.com/scfried/soft-type-jersey), under the SIL Open Font License
   (`art/fonts/LICENSES`), and come from the screens on
-  [Kyles Sofle](https://github.com/kylephillipsau/zmk-config-kyles-sofle).
+  [Kyles Sofle](https://github.com/kylephillipsau/zmk-config-sofle).
