@@ -1,5 +1,7 @@
 # Short Temper
 
+![Both halves of the Temper side by side on a dark desk: matte black cases and blank black keycaps, with each half's controller showing in its well](docs/renders/desk.jpg)
+
 ZMK config for a Temper, a 36-key wireless split keyboard. Each half has a ProMicro NRF52840 (a
 nice!nano v2 clone) and a socket for an optional nice!view screen. The screens only go on at a desk,
 and the same firmware runs with or without them. It's based on the seller's repo,
@@ -232,6 +234,12 @@ explains how the halves share the layer and charging state.
 
 A 3D-printed holster wears each half on a thigh, clipped into a front pocket, and the keyboard lifts
 straight out for desk use. [case/README.md](case/README.md) covers the parts, printing and assembly.
+
+## Controller
+
+![Close up of the right half's controller from above: the ProMicro NRF52840 label, gold pin pads with their labels, the USB-C port at the top and the screen's 5-pin socket below](docs/renders/controller.jpg)
+
+The right half's controller in its well. The nice!view plugs into the 5-pin socket below it.
 
 ## Known gaps
 

@@ -5,7 +5,22 @@
 A holster for wearing the Temper on your thighs, with a swappable clip that goes into a pocket. The
 keyboard's printed case isn't changed, and it lifts straight out for desk use.
 
-The test fit has been printed, and the keyboard fits it. The full holster hasn't been printed yet.
+The test fit has been printed, and the keyboard fits it. The full holster hasn't been printed yet, so
+these are renders of the faceted one:
+
+<table>
+  <tr>
+    <td align="center" colspan="2"><img src="../docs/holster/hero.jpg" alt="A half of the Temper sitting in the faceted holster, with the clip behind it"></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="../docs/holster/back.jpg" alt="The faceted holster lying face down, showing the back that sits against the leg, the clip, and the windows beside it"></td>
+    <td align="center"><img src="../docs/holster/keys.jpg" alt="Close up across the keycaps where they meet the holster's wall"></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="../docs/holster/name.jpg" alt="SHORT TEMPER cut into the holster's front face"></td>
+    <td align="center"><img src="../docs/holster/side.jpg" alt="The holster standing upright as it's worn, with SHORT TEMPER on the front and the clip behind"></td>
+  </tr>
+</table>
 
 ## How it's worn
 
