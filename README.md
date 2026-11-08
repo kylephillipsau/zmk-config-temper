@@ -80,6 +80,12 @@ holds modifiers and your right hand navigates:
 | Jump to line start or end | D + J or L |
 | Switch apps (Cmd+Tab) | D + W, tapping W to move along |
 | Alt+Tab | S + W, tapping W to move along |
+| Switch Spaces (Ctrl+left or right) | A + J or L |
+| Mission Control (Ctrl+up) | A + I |
+| The app's windows (Ctrl+down) | A + K |
+
+Holding Enter is Ctrl too, so for Spaces and Mission Control you can hold Enter instead of A, with
+your other thumb on the left outer thumb.
 
 Home and End scroll the whole document in many Mac apps, so use D + J or L to jump within a line.
 
