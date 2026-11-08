@@ -54,8 +54,8 @@ flowchart LR
 | Backspace | Tap the left outer thumb, or hold it and press P (holding P repeats) |
 | Numbers 1–0 | Hold the right inner thumb, then the top row (Q is 1, P is 0) |
 | Symbols `!@#$%^&*()` | Hold the left inner thumb, then the top row |
-| `[` `]` `` ` `` `\` `'` | Hold the left inner thumb, then H, J, K, L, ; |
-| `{` `}` `~` `\|` `"` | Hold the left inner thumb, then N, M, comma, full stop, / |
+| `[` `]` `` ` `` `\` `;` | Hold the left inner thumb, then H, J, K, L, ' |
+| `{` `}` `~` `\|` `:` | Hold the left inner thumb, then N, M, comma, full stop, / |
 | Cmd shortcuts | Hold the left middle thumb, then the letter |
 | Ctrl shortcuts | Hold the right middle thumb, then the letter |
 | Delete | Hold the left inner thumb, then D |
@@ -63,7 +63,7 @@ flowchart LR
 | Home, End | Hold the left outer thumb, then U, O |
 | Page Up, Page Down | Hold the left outer thumb, then Y, H |
 | Tab, Esc | Hold the left outer thumb, then W, Q |
-| F1–F10 | Hold the right inner thumb, then the home row (A is F1, ; is F10) |
+| F1–F10 | Hold the right inner thumb, then the home row (A is F1, ' is F10) |
 | F11, F12 | Hold the right inner thumb, then Z, X |
 | Previous, Play, Next | Hold the right inner thumb, then N, M, comma |
 | Volume down, up, Mute | Hold the right inner thumb, then full stop, /, B |
@@ -169,8 +169,10 @@ These are still missing, and they're the next things to sort out:
   seller's key could only tap Cmd and sent Ctrl when held, so Ctrl moved to holding the right middle
   thumb.
 - **Space:** both inner thumbs are Space. The seller's left Space was on the middle thumb.
-- **Punctuation:** the right side of the SYM layer has the brackets, quotes, backslash, pipe,
-  backtick and tilde, which the seller's keymap left out. The bottom row is the home row shifted.
+- **Punctuation:** the right side of the SYM layer has the brackets, backslash, pipe, backtick and
+  tilde, which the seller's keymap left out. The bottom row is the home row shifted.
+- **Apostrophe on Base:** `'` (Shift for `"`) is where `;` was, right of L, as it's typed far more
+  often. `;` and `:` moved to the same key on SYM, and its bottom row.
 - **Backspace on P:** hold the left outer thumb and press P.
 - **NAV layer:** the seller's ARROWS layer is now a full navigation layer on the right hand, with
   modifiers on the left home row.
