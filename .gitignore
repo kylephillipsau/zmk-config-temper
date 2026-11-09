@@ -4,3 +4,4 @@ case/out/
 __pycache__/
 render/mesh/
 render/out/
+render/holster-mesh/
