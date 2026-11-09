@@ -45,7 +45,7 @@ flowchart LR
 | Left middle | Cmd (Ctrl on Windows) | Cmd (Ctrl on Windows) |
 | Left inner | Space | SYM layer |
 | Right inner | Space | NUM layer |
-| Right middle | Enter | Ctrl |
+| Right middle | Enter | Ctrl (Win on Windows) |
 | Right outer | Shift | Shift |
 
 ### Common keys
@@ -78,6 +78,7 @@ NAV, on the left outer thumb:
 | Y, H | Page Up, Page Down |
 | W, Q | Tab, Esc |
 | P | Backspace, which repeats while held |
+| X | Screenshot of an area: Cmd+Shift+4, or Win+Shift+S on Windows |
 
 ### Modifiers with navigation
 
@@ -158,8 +159,10 @@ thumbs + T first.
 ### Mac and Windows
 
 The keymap is laid out for macOS. Selecting slot 3 turns on the WIN layer, which puts Ctrl on the
-left middle thumb in place of Cmd, so Ctrl+C and the rest work where your thumb expects. Every
-other key is the same. Selecting any other slot turns it off.
+left middle thumb in place of Cmd, so Ctrl+C and the rest work where your thumb expects. Holding
+Enter is Win instead of a second Ctrl, so Win+L locks the computer and Win+E, Win+D and the rest are
+that thumb and a letter. The screenshot key on NAV + X sends Win+Shift+S. Every other key is the
+same. Selecting any other slot turns it off.
 
 While it's on, the left screen reads WIN instead of BASE, and its modifier badges and NAV keys show
 the Windows logo and ALT in place of Cmd and Option.
@@ -167,7 +170,7 @@ the Windows logo and ALT in place of Cmd and Option.
 <table>
   <tr>
     <td align="center"><img src="docs/screens/left-win.png" width="150" alt="Left screen on slot 3: the WIN layer, slot 3 in use, and the Windows logo, ALT, Ctrl, Shift and Caps Lock badges above the combos"></td>
-    <td align="center"><img src="docs/screens/left-nav-win.png" width="150" alt="Left screen with NAV held on slot 3: Esc and Tab on Q and W, Ctrl, ALT, the Windows logo and Shift on A, S, D and F, with the Windows logo badge held"></td>
+    <td align="center"><img src="docs/screens/left-nav-win.png" width="150" alt="Left screen with NAV held on slot 3: Esc and Tab on Q and W, Ctrl, ALT, the Windows logo and Shift on A, S, D and F, a camera for the screenshot on X, and the Windows logo badge held"></td>
   </tr>
   <tr>
     <td align="center">Slot 3</td>
@@ -206,7 +209,7 @@ USB and turn its power switch off and on.
   <tr>
     <td align="center"><img src="docs/screens/left-sym.png" width="150" alt="Left screen with SYM held: ! @ # $ % on the top row, Delete on D, Bluetooth slots 5 on A and 4 to 1 on Z, X, C and V, and the left inner thumb solid"></td>
     <td align="center"><img src="docs/screens/right-sym.png" width="150" alt="Right screen with SYM held: ^ & * ( ) on the top row, [ ] ` \ ; on the home row, and { } ~ | : on the bottom row"></td>
-    <td align="center"><img src="docs/screens/left-nav.png" width="150" alt="Left screen with NAV held: Esc and Tab on Q and W, Ctrl, Option, Cmd and Shift on A, S, D and F, and the left outer thumb solid"></td>
+    <td align="center"><img src="docs/screens/left-nav.png" width="150" alt="Left screen with NAV held: Esc and Tab on Q and W, Ctrl, Option, Cmd and Shift on A, S, D and F, a camera for the screenshot on X, and the left outer thumb solid"></td>
     <td align="center"><img src="docs/screens/right-nav.png" width="150" alt="Right screen with NAV held: Page Up, Home, up, End and Backspace on the top row, and Page Down, left, down and right on the home row"></td>
   </tr>
   <tr>

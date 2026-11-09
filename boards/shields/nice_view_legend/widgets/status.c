@@ -379,7 +379,10 @@ ZMK_SUBSCRIPTION(widget_output_status, zmk_ble_active_profile_changed);
 // Below the status area: the combos on Base, and the left hand's keys while a layer is held. The
 // layer numbers follow config/temper.keymap, as legend_for_layer() in peripheral_status.c does.
 // WIN (1) is Windows keys on Base, so it shows the combos too, and NAV's modifiers in Windows form.
+// NAV_WIN (5) is NAV on Windows, so it shows as NAV.
 #define WIN_LAYER 1
+#define NAV_LAYER 4
+#define NAV_WIN_LAYER 5
 
 static const lv_img_dsc_t *card_for_layer(uint8_t layer, bool windows) {
     switch (layer) {
@@ -388,8 +391,9 @@ static const lv_img_dsc_t *card_for_layer(uint8_t layer, bool windows) {
     case 3:
         return &left_sym;
     case 4:
-        return windows ? &left_nav_win : &left_nav;
     case 5:
+        return windows ? &left_nav_win : &left_nav;
+    case 6:
         return &left_system;
     default:
         return &left_combos;
@@ -414,9 +418,10 @@ static void layer_status_update_cb(struct layer_status_state state) {
 
 static struct layer_status_state layer_status_get_state(const zmk_event_t *eh) {
     zmk_keymap_layer_index_t index = zmk_keymap_highest_layer_active();
+    zmk_keymap_layer_index_t named = index == NAV_WIN_LAYER ? NAV_LAYER : index;
     return (struct layer_status_state){
         .index = index,
-        .label = zmk_keymap_layer_name(zmk_keymap_layer_index_to_id(index)),
+        .label = zmk_keymap_layer_name(zmk_keymap_layer_index_to_id(named)),
         .windows = zmk_keymap_layer_active(zmk_keymap_layer_index_to_id(WIN_LAYER)),
     };
 }

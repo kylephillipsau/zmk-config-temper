@@ -309,6 +309,9 @@ PLAY = glyph(["#...#.#", "##..#.#", "###.#.#", "##..#.#", "#...#.#"])
 BKSP = glyph(["...######", "..#.....#", ".#..#.#.#", "#....#..#", ".#..#.#.#", "..#.....#",
               "...######"])
 DEL = [row[::-1] for row in BKSP]
+# A screenshot of an area: a camera
+SHOT = glyph(["...###...", "#########", "#..###..#", "#.#...#.#", "#.#...#.#", "#..###..#",
+              "#########"])
 # Home and End: to the start and end of the line
 HOME = glyph(["#..#...", "#.##...", "#######", "#.##...", "#..#..."])
 END = [row[::-1] for row in HOME]
@@ -335,7 +338,7 @@ KEYS = {
         'R': ['^', '&', '*', '(', ')', '[', ']', '`', '\\', ';', '{', '}', '~', '|', ':'],
     },
     'NAV': {
-        'L': ['ESC', 'TAB', N, N, N, CTRL, OPT, CMD, SHIFT, N, N, N, N, N, N],
+        'L': ['ESC', 'TAB', N, N, N, CTRL, OPT, CMD, SHIFT, N, N, SHOT, N, N, N],
         'R': [('PG', TRI_U), HOME, ARROW_U, END, BKSP,
               ('PG', TRI_D), rot(ARROW_U, 3), rot(ARROW_U, 2), rot(ARROW_U, 1), N,
               N, N, N, N, N],
@@ -346,7 +349,7 @@ KEYS = {
     },
 }
 # NAV's left hand on Windows: the same keys, drawn with Windows modifiers
-NAV_WIN_L = ['ESC', 'TAB', N, N, N, CTRL, ALT, WIN, SHIFT, N, N, N, N, N, N]
+NAV_WIN_L = ['ESC', 'TAB', N, N, N, CTRL, ALT, WIN, SHIFT, N, N, SHOT, N, N, N]
 HELD = {'NUM': {'R': (0,)}, 'SYM': {'L': (2,)}, 'NAV': {'L': (0,)}, 'SYSTEM': {'L': (2,), 'R': (0,)}}
 
 

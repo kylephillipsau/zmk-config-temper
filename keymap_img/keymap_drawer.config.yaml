@@ -178,6 +178,8 @@ parse_config:
     '&bt BT_CLR_ALL': {t: "CLEAR\nALL BT", type: danger}
     '&bt BT_CLR': {t: "CLEAR\nSLOT", type: danger}
     '&out OUT_TOG': "USB/\nBT"
+    '&kp LG(LS(N4))': "Screen-\nshot"
+    '&kp LG(LS(S))': "Screen-\nshot"
     '&soft_off': {t: "SOFT\nOFF", type: danger}
     '&bootloader': {t: "BOOT\nLOADER", type: danger}
     '&mm_grescm': {t: '⎋', s: '` ~'}

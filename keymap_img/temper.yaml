@@ -63,7 +63,7 @@ layers:
     - ⌃
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
-    - {t: ▽, type: trans}
+    - {t: ⏎, h: ⌘}
     - {t: ▽, type: trans}
   NUM:
   - ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
@@ -108,7 +108,48 @@ layers:
   NAV:
   - [Esc, ↹, '', '', '', PgUp, Home, ↑, End, ⌫]
   - [⌃, ⎇, ⌘, ⇧, '', PgDn, ←, ↓, →, '']
-  - ['', '', '', '', '', '', '', '', '', '']
+  - ['', 'Screen-
+
+      shot', '', '', '', '', '', '', '', '']
+  - - {type: held}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+  NAV_WIN:
+  - - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+  - - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+  - - {t: ▽, type: trans}
+    - 'Screen-
+
+      shot'
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
+    - {t: ▽, type: trans}
   - - {type: held}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}

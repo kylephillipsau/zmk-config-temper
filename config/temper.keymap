@@ -12,14 +12,19 @@
 
 /*
  * Layer numbers. The screens (boards/shields/nice_view_legend) and src/os_layer.c follow them.
- * WIN sits just above Base so the held layers stay on top of it.
+ * WIN sits just above Base so the held layers stay on top of it, and NAV_WIN just above NAV.
  */
 #define L_BASE 0
 #define L_WIN 1
 #define L_NUM 2
 #define L_SYM 3
 #define L_NAV 4
-#define L_SYSTEM 5
+#define L_NAV_WIN 5
+#define L_SYSTEM 6
+
+/* Drag out an area to screenshot: Cmd+Shift+4 on a Mac, and Snipping Tool on Windows */
+#define SCREENSHOT_MAC LG(LS(N4))
+#define SCREENSHOT_WIN LG(LS(S))
 
 &sk { quick-release; };
 
@@ -154,6 +159,12 @@
             if-layers = <L_NUM L_SYM>;
             then-layer = <L_SYSTEM>;
         };
+
+        /* NAV on Windows: NAV's keys, with Windows shortcuts where they differ */
+        nav_win_layer {
+            if-layers = <L_WIN L_NAV>;
+            then-layer = <L_NAV_WIN>;
+        };
     };
 
     keymap {
@@ -171,8 +182,9 @@
         };
 
         /*
-         * Windows: Ctrl on the left middle thumb in place of Cmd. src/os_layer.c turns this on
-         * while Bluetooth slot 3 (BT_SEL 2, the work computer) is selected and off for the rest.
+         * Windows: Ctrl on the left middle thumb in place of Cmd, and holding Enter is Win (for Win+L
+         * and the rest) where it was a second Ctrl. src/os_layer.c turns this on while Bluetooth
+         * slot 3 (BT_SEL 2, the work computer) is selected and off for the rest.
          */
         win {
             display-name = "WIN";
@@ -180,7 +192,7 @@
   &trans  &trans  &trans  &trans     &trans        &trans  &trans  &trans  &trans  &trans
   &trans  &trans  &trans  &trans     &trans        &trans  &trans  &trans  &trans  &trans
   &trans  &trans  &trans  &trans     &trans        &trans  &trans  &trans  &trans  &trans
-                  &trans  &kp LCTRL  &trans        &trans  &trans  &trans
+                  &trans  &kp LCTRL  &trans        &trans  &mt LGUI ENTER  &trans
             >;
         };
 
@@ -210,10 +222,21 @@
         layer_3 {
             display-name = "NAV";
             bindings = <
-  &kp ESC    &kp TAB   &none     &none      &none    &kp PG_UP  &kp HOME  &kp UP    &kp END    &kp BACKSPACE
-  &kp LCTRL  &kp LALT  &kp LGUI  &kp LSHFT  &none    &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &none
-  &none      &none     &none     &none      &none    &none      &none     &none     &none      &none
-                       &trans    &trans     &trans   &trans     &trans    &trans
+  &kp ESC    &kp TAB             &none     &none      &none    &kp PG_UP  &kp HOME  &kp UP    &kp END    &kp BACKSPACE
+  &kp LCTRL  &kp LALT            &kp LGUI  &kp LSHFT  &none    &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &none
+  &none      &kp SCREENSHOT_MAC  &none     &none      &none    &none      &none     &none     &none      &none
+                                 &trans    &trans     &trans   &trans     &trans    &trans
+            >;
+        };
+
+        /* NAV while WIN is on, from the conditional layer above */
+        nav_win {
+            display-name = "NAV_WIN";
+            bindings = <
+  &trans  &trans              &trans  &trans  &trans        &trans  &trans  &trans  &trans  &trans
+  &trans  &trans              &trans  &trans  &trans        &trans  &trans  &trans  &trans  &trans
+  &trans  &kp SCREENSHOT_WIN  &trans  &trans  &trans        &trans  &trans  &trans  &trans  &trans
+                              &trans  &trans  &trans        &trans  &trans  &trans
             >;
         };
 
