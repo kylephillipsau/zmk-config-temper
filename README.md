@@ -159,9 +159,24 @@ thumbs + T first.
 
 The keymap is laid out for macOS. Selecting slot 3 turns on the WIN layer, which puts Ctrl on the
 left middle thumb in place of Cmd, so Ctrl+C and the rest work where your thumb expects. Every
-other key is the same, and the left screen reads WIN instead of BASE. Selecting any other slot
-turns it off. `src/os_layer.c` lists the Windows slots, and follows the selected slot rather than
-the connection, so over USB the keys match whichever slot is selected.
+other key is the same. Selecting any other slot turns it off.
+
+While it's on, the left screen reads WIN instead of BASE, and its modifier badges and NAV keys show
+the Windows logo and ALT in place of Cmd and Option.
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screens/left-win.png" width="150" alt="Left screen on slot 3: the WIN layer, slot 3 in use, and the Windows logo, ALT, Ctrl, Shift and Caps Lock badges above the combos"></td>
+    <td align="center"><img src="docs/screens/left-nav-win.png" width="150" alt="Left screen with NAV held on slot 3: Esc and Tab on Q and W, Ctrl, ALT, the Windows logo and Shift on A, S, D and F, with the Windows logo badge held"></td>
+  </tr>
+  <tr>
+    <td align="center">Slot 3</td>
+    <td align="center">Slot 3, NAV held</td>
+  </tr>
+</table>
+
+`src/os_layer.c` lists the Windows slots. It follows the selected slot rather than the connection,
+so over USB the keys match whichever slot is selected.
 
 ## Power
 

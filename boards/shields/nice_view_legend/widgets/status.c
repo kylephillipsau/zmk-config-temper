@@ -55,6 +55,7 @@ LV_IMG_DECLARE(left_combos);
 LV_IMG_DECLARE(left_num);
 LV_IMG_DECLARE(left_sym);
 LV_IMG_DECLARE(left_nav);
+LV_IMG_DECLARE(left_nav_win);
 LV_IMG_DECLARE(left_system);
 
 #define SCREEN_W 68
@@ -76,6 +77,7 @@ struct output_status_state {
 struct layer_status_state {
     zmk_keymap_layer_index_t index;
     const char *label;
+    bool windows; // the WIN layer is on: Windows modifiers on the badges and the NAV card
 };
 
 struct peripheral_battery_state {
@@ -166,19 +168,33 @@ static void draw_slots(const struct frame *f, const struct status_state *state) 
     }
 }
 
+// Where a glyph sits across a 12 px badge: centred, and when it can't be exactly, the odd pixel
+// goes beside the edge with more ink, as badge_x() in art/screens.py does.
+static int badge_x(const struct glyph *g) {
+    int left_ink = 0, right_ink = 0;
+    for (int r = 0; r < g->h; r++) {
+        left_ink += (g->rows[r] >> (g->w - 1)) & 1;
+        right_ink += g->rows[r] & 1;
+    }
+    return 1 + (10 - g->w + (left_ink > right_ink)) / 2;
+}
+
 static void draw_badges(const struct frame *f, const struct status_state *state) {
+    // On Windows the GUI and Alt badges show the Windows logo and ALT instead of Cmd and Option
     static const struct {
-        const struct glyph *glyph;
+        const struct glyph *glyph, *windows;
         uint8_t mods;
     } badges[] = {
-        {&glyph_cmd, MOD_LGUI | MOD_RGUI},  {&glyph_opt, MOD_LALT | MOD_RALT},
-        {&glyph_ctrl, MOD_LCTL | MOD_RCTL}, {&glyph_shift, MOD_LSFT | MOD_RSFT},
-        {&glyph_caps, 0},
+        {&glyph_cmd, &glyph_win, MOD_LGUI | MOD_RGUI},
+        {&glyph_opt, &glyph_alt, MOD_LALT | MOD_RALT},
+        {&glyph_ctrl, &glyph_ctrl, MOD_LCTL | MOD_RCTL},
+        {&glyph_shift, &glyph_shift, MOD_LSFT | MOD_RSFT},
+        {&glyph_caps, &glyph_caps, 0},
     };
     lv_color_t ink = LVGL_FOREGROUND, paper = LVGL_BACKGROUND;
 
     for (int i = 0; i < ARRAY_SIZE(badges); i++) {
-        const struct glyph *g = badges[i].glyph;
+        const struct glyph *g = state->windows ? badges[i].windows : badges[i].glyph;
         int x = i * 14;
         bool on = badges[i].mods ? (state->mods & badges[i].mods) != 0 : state->caps_lock;
 
@@ -187,7 +203,7 @@ static void draw_badges(const struct frame *f, const struct status_state *state)
         } else {
             outline(f, x, 50, 12, 13, ink);
         }
-        draw_glyph(f, x + (12 - g->w) / 2, 50 + (13 - g->h) / 2, g, on ? paper : ink);
+        draw_glyph(f, x + badge_x(g), 50 + (13 - g->h) / 2, g, on ? paper : ink);
     }
 }
 
@@ -362,15 +378,17 @@ ZMK_SUBSCRIPTION(widget_output_status, zmk_ble_active_profile_changed);
 
 // Below the status area: the combos on Base, and the left hand's keys while a layer is held. The
 // layer numbers follow config/temper.keymap, as legend_for_layer() in peripheral_status.c does.
-// WIN (1) is Windows keys on Base, so it shows the combos too.
-static const lv_img_dsc_t *card_for_layer(uint8_t layer) {
+// WIN (1) is Windows keys on Base, so it shows the combos too, and NAV's modifiers in Windows form.
+#define WIN_LAYER 1
+
+static const lv_img_dsc_t *card_for_layer(uint8_t layer, bool windows) {
     switch (layer) {
     case 2:
         return &left_num;
     case 3:
         return &left_sym;
     case 4:
-        return &left_nav;
+        return windows ? &left_nav_win : &left_nav;
     case 5:
         return &left_system;
     default:
@@ -383,10 +401,11 @@ static void layer_status_update_cb(struct layer_status_state state) {
     SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) {
         widget->state.layer_index = state.index;
         widget->state.layer_label = state.label;
+        widget->state.windows = state.windows;
         draw_status(widget->obj, widget);
 
         lv_obj_t *card = lv_obj_get_child(widget->obj, 1);
-        const lv_img_dsc_t *src = card_for_layer(state.index);
+        const lv_img_dsc_t *src = card_for_layer(state.index, state.windows);
         if (lv_img_get_src(card) != src) {
             lv_img_set_src(card, src);
         }
@@ -396,7 +415,10 @@ static void layer_status_update_cb(struct layer_status_state state) {
 static struct layer_status_state layer_status_get_state(const zmk_event_t *eh) {
     zmk_keymap_layer_index_t index = zmk_keymap_highest_layer_active();
     return (struct layer_status_state){
-        .index = index, .label = zmk_keymap_layer_name(zmk_keymap_layer_index_to_id(index))};
+        .index = index,
+        .label = zmk_keymap_layer_name(zmk_keymap_layer_index_to_id(index)),
+        .windows = zmk_keymap_layer_active(zmk_keymap_layer_index_to_id(WIN_LAYER)),
+    };
 }
 
 ZMK_DISPLAY_WIDGET_LISTENER(widget_layer_status, struct layer_status_state, layer_status_update_cb,

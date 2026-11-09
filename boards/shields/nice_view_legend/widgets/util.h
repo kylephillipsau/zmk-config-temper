@@ -29,6 +29,7 @@ struct status_state {
     bool profiles_bonded[NICEVIEW_PROFILE_COUNT];
     uint8_t layer_index;
     const char *layer_label;
+    bool windows;               // the WIN layer is on (Windows modifiers)
     int16_t peripheral_battery; // -1 until the right half reports its level
     bool peripheral_charging;   // the right half is on USB power
     uint8_t mods;               // held modifier keys, MOD_* bits

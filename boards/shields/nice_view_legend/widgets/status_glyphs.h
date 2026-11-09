@@ -30,6 +30,26 @@ static const uint16_t glyph_opt_rows[] = {
 };
 static const struct glyph glyph_opt = {9, 5, glyph_opt_rows};
 
+static const uint16_t glyph_win_rows[] = {
+    0x0077, // ###.###
+    0x0055, // #.#.#.#
+    0x0077, // ###.###
+    0x0000, // .......
+    0x0077, // ###.###
+    0x0055, // #.#.#.#
+    0x0077, // ###.###
+};
+static const struct glyph glyph_win = {7, 7, glyph_win_rows};
+
+static const uint16_t glyph_alt_rows[] = {
+    0x0097, // .#..#.###
+    0x0152, // #.#.#..#.
+    0x01d2, // ###.#..#.
+    0x0152, // #.#.#..#.
+    0x015a, // #.#.##.#.
+};
+static const struct glyph glyph_alt = {9, 5, glyph_alt_rows};
+
 static const uint16_t glyph_ctrl_rows[] = {
     0x0010, // ....#....
     0x0028, // ...#.#...
