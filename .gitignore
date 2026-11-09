@@ -2,3 +2,5 @@ firmware/
 .DS_Store
 case/out/
 __pycache__/
+render/mesh/
+render/out/
