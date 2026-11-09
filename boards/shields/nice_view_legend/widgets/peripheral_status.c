@@ -41,16 +41,17 @@ struct legend_layer_state {
     uint8_t layer;
 };
 
-// Layer numbers as in config/temper.keymap. SYSTEM is the conditional layer for both Space thumbs.
+// Layer numbers as in config/temper.keymap. SYSTEM is the conditional layer for both Space thumbs,
+// and WIN (1, Windows keys for the work computer) shows as Base.
 static const lv_img_dsc_t *legend_for_layer(uint8_t layer) {
     switch (layer) {
-    case 1:
-        return &legend_num;
     case 2:
-        return &legend_sym;
+        return &legend_num;
     case 3:
-        return &legend_nav;
+        return &legend_sym;
     case 4:
+        return &legend_nav;
+    case 5:
         return &legend_system;
     default:
         return &legend_base;

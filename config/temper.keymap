@@ -10,10 +10,16 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/outputs.h>
 
-#define Base 0
-#define NAV_NUM 1
-#define SYM 2
-#define FUN 3
+/*
+ * Layer numbers. The screens (boards/shields/nice_view_legend) and src/os_layer.c follow them.
+ * WIN sits just above Base so the held layers stay on top of it.
+ */
+#define L_BASE 0
+#define L_WIN 1
+#define L_NUM 2
+#define L_SYM 3
+#define L_NAV 4
+#define L_SYSTEM 5
 
 &sk { quick-release; };
 
@@ -92,52 +98,51 @@
         a {
             bindings = <&kp ENTER>;
             key-positions = <7 6>;
-            layers = <0>;
+            layers = <L_BASE L_WIN>;
             timeout-ms = <30>;
         };
 
         b {
             bindings = <&kp TAB>;
-            key-positions = <21 22>;
-            layers = <0>;
-            timeout-ms = <30>;
+            key-positions = <0 1>;
+            layers = <L_BASE L_WIN>;
         };
 
         c {
             bindings = <&kp BACKSPACE>;
             key-positions = <7 8>;
-            layers = <0>;
+            layers = <L_BASE L_WIN>;
             timeout-ms = <30>;
         };
 
         d {
             bindings = <&kp ESC>;
             key-positions = <1 2>;
-            layers = <0>;
+            layers = <L_BASE L_WIN>;
         };
 
         e {
             bindings = <&kp MINUS>;
             key-positions = <16 17>;
-            layers = <0>;
+            layers = <L_BASE L_WIN>;
         };
 
         f {
             bindings = <&kp EQUAL>;
             key-positions = <17 18>;
-            layers = <0>;
+            layers = <L_BASE L_WIN>;
         };
 
         g {
             bindings = <&kp CLCK>;
             key-positions = <11 12>;
-            layers = <0>;
+            layers = <L_BASE L_WIN>;
         };
 
         h {
             bindings = <&kp BACKSPACE>;
             key-positions = <9 8>;
-            layers = <0>;
+            layers = <L_BASE L_WIN>;
         };
     };
 
@@ -146,8 +151,8 @@
         compatible = "zmk,conditional-layers";
 
         system_layer {
-            if-layers = <1 2>;
-            then-layer = <4>;
+            if-layers = <L_NUM L_SYM>;
+            then-layer = <L_SYSTEM>;
         };
     };
 
@@ -161,7 +166,21 @@
   &kp Q  &kp W  &kp E                   &kp R        &kp T                 &kp Y        &kp U      &kp I      &kp O    &kp P
   &kp A  &kp S  &kp D                   &kp F        &kp G                 &kp H        &kp J      &kp K      &kp L    &kp SQT
   &kp Z  &kp X  &kp C                   &kp V        &kp B                 &kp N        &kp M      &kp COMMA  &kp DOT  &kp FSLH
-                &lt 3 BACKSPACE         &kp LEFT_WIN  &lt 2 SPACE          &lt 1 SPACE  &mt RCTRL ENTER  &kp RSHFT
+                &lt L_NAV BACKSPACE     &kp LEFT_WIN  &lt L_SYM SPACE      &lt L_NUM SPACE  &mt RCTRL ENTER  &kp RSHFT
+            >;
+        };
+
+        /*
+         * Windows: Ctrl on the left middle thumb in place of Cmd. src/os_layer.c turns this on
+         * while Bluetooth slot 3 (BT_SEL 2, the work computer) is selected and off for the rest.
+         */
+        win {
+            display-name = "WIN";
+            bindings = <
+  &trans  &trans  &trans  &trans     &trans        &trans  &trans  &trans  &trans  &trans
+  &trans  &trans  &trans  &trans     &trans        &trans  &trans  &trans  &trans  &trans
+  &trans  &trans  &trans  &trans     &trans        &trans  &trans  &trans  &trans  &trans
+                  &trans  &kp LCTRL  &trans        &trans  &trans  &trans
             >;
         };
 
@@ -176,6 +195,7 @@
             >;
         };
 
+        /* Bluetooth slots are numbered from 1: V is slot 1 (BT_SEL 0) up to A, slot 5 (BT_SEL 4) */
         sym {
             label = "SYM";
             display-name = "SYM";

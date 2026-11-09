@@ -42,7 +42,7 @@ flowchart LR
 | Thumb key | Tap | Hold |
 |---|---|---|
 | Left outer | Backspace | NAV layer |
-| Left middle | Cmd | Cmd |
+| Left middle | Cmd (Ctrl on Windows) | Cmd (Ctrl on Windows) |
 | Left inner | Space | SYM layer |
 | Right inner | Space | NUM layer |
 | Right middle | Enter | Ctrl |
@@ -103,8 +103,8 @@ and End scroll the whole document in many Mac apps, so use D + J or L to jump wi
 
 | Keys | Sends |
 |---|---|
+| Q + W | Tab |
 | W + E | Esc |
-| X + C | Tab |
 | S + D | Caps Lock |
 | U + I | Enter |
 | I + O | Backspace |
@@ -112,8 +112,8 @@ and End scroll the whole document in many Mac apps, so use D + J or L to jump wi
 | J + K | `-` |
 | K + L | `=` |
 
-Combos only work on Base, so moving between arrows on a layer can't trigger them. U + I, I + O and
-X + C have a 30 ms window, so those keys need to land almost together. The rest use ZMK's default.
+Combos only work on Base, so moving between arrows on a layer can't trigger them. U + I and I + O
+have a 30 ms window, so those keys need to land almost together. The rest use ZMK's default.
 
 ### Timing
 
@@ -143,17 +143,25 @@ SYSTEM keys need both Space thumbs held, so typing can't hit them by accident:
 There are five slots, and the keyboard types to one device at a time. While the left half is plugged
 into a computer it types over USB, so press both Space thumbs + Y to use Bluetooth instead.
 
-| Slot | Hold the left inner thumb, then |
-|---|---|
-| 0 | V |
-| 1 | C |
-| 2 | X |
-| 3 | Z |
-| 4 | A |
+| Slot | Device | Keys | Hold the left inner thumb, then |
+|---|---|---|---|
+| 1 | MacBook | macOS | V |
+| 2 | Phone | macOS | C |
+| 3 | Work computer | Windows | X |
+| 4 | | macOS | Z |
+| 5 | | macOS | A |
 
 To pair a device, select an unused slot and choose `Short Temper` in the device's Bluetooth settings.
 To pair a device again after forgetting the keyboard on it, select its slot and press both Space
 thumbs + T first.
+
+### Mac and Windows
+
+The keymap is laid out for macOS. Selecting slot 3 turns on the WIN layer, which puts Ctrl on the
+left middle thumb in place of Cmd, so Ctrl+C and the rest work where your thumb expects. Every
+other key is the same, and the left screen reads WIN instead of BASE. Selecting any other slot
+turns it off. `src/os_layer.c` lists the Windows slots, and follows the selected slot rather than
+the connection, so over USB the keys match whichever slot is selected.
 
 ## Power
 
@@ -171,7 +179,7 @@ USB and turn its power switch off and on.
 
 <table>
   <tr>
-    <td align="center"><img src="docs/screens/left.png" width="150" alt="Left screen on Base: both batteries, the BASE layer, Bluetooth slots 0 to 4 with slot 0 in use, the Cmd, Option, Ctrl, Shift and Caps Lock badges, and the combos"></td>
+    <td align="center"><img src="docs/screens/left.png" width="150" alt="Left screen on Base: both batteries, the BASE layer, Bluetooth slots 1 to 5 with slot 1 in use, the Cmd, Option, Ctrl, Shift and Caps Lock badges, and the combos"></td>
     <td align="center"><img src="docs/screens/right-base.png" width="150" alt="Right screen on Base: the name Short Temper, a drawing of the board, and which thumbs to hold for NAV, SYM, NUM and SYSTEM"></td>
     <td align="center"><img src="docs/screens/left-num.png" width="150" alt="Left screen with NUM held: 1 to 5 on the top row, F1 to F5 on the home row, F11 and F12 on Z and X, and Mute on B"></td>
     <td align="center"><img src="docs/screens/right-num.png" width="150" alt="Right screen with NUM held: 6 to 0 on the top row, F6 to F10 on the home row, previous, play, next and volume down and up on the bottom row, and the right inner thumb solid"></td>
@@ -181,7 +189,7 @@ USB and turn its power switch off and on.
     <td align="center" colspan="2">NUM held</td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/screens/left-sym.png" width="150" alt="Left screen with SYM held: ! @ # $ % on the top row, Delete on D, Bluetooth slots 4 on A and 3 to 0 on Z, X, C and V, and the left inner thumb solid"></td>
+    <td align="center"><img src="docs/screens/left-sym.png" width="150" alt="Left screen with SYM held: ! @ # $ % on the top row, Delete on D, Bluetooth slots 5 on A and 4 to 1 on Z, X, C and V, and the left inner thumb solid"></td>
     <td align="center"><img src="docs/screens/right-sym.png" width="150" alt="Right screen with SYM held: ^ & * ( ) on the top row, [ ] ` \ ; on the home row, and { } ~ | : on the bottom row"></td>
     <td align="center"><img src="docs/screens/left-nav.png" width="150" alt="Left screen with NAV held: Esc and Tab on Q and W, Ctrl, Option, Cmd and Shift on A, S, D and F, and the left outer thumb solid"></td>
     <td align="center"><img src="docs/screens/right-nav.png" width="150" alt="Right screen with NAV held: Page Up, Home, up, End and Backspace on the top row, and Page Down, left, down and right on the home row"></td>
@@ -264,7 +272,10 @@ The right half's controller in its well. The nice!view plugs into the 5-pin sock
 - Combos only work on Base.
 - It advertises as Short Temper (`config/temper.conf`), and `src/ble_name.c` replaces any older name
   stored in settings.
-- Bluetooth adds slot 4, a key to clear one slot, and a USB/Bluetooth toggle.
+- Bluetooth adds a fifth slot, a key to clear one slot, and a USB/Bluetooth toggle. Slots are
+  numbered from 1.
+- Slot 3 gets Windows keys, from the WIN layer and `src/os_layer.c`.
+- Tab is on Q + W.
 - Sleep and soft off are new. The key matrix needed `wakeup-source` to wake from sleep.
 - The bootloader and Clear Bluetooth keys moved from SYM, where rolling off Space could hit them, to
   SYSTEM. The right half gained a bootloader key.

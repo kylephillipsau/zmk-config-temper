@@ -313,8 +313,8 @@ KEYS = {
               PREV, PLAY, NEXT, VOL_DN, VOL_UP],
     },
     'SYM': {
-        'L': ['!', '@', '#', '$', '%', ('BT', '4'), N, DEL, N, N,
-              ('BT', '3'), ('BT', '2'), ('BT', '1'), ('BT', '0'), N],
+        'L': ['!', '@', '#', '$', '%', ('BT', '5'), N, DEL, N, N,
+              ('BT', '4'), ('BT', '3'), ('BT', '2'), ('BT', '1'), N],
         'R': ['^', '&', '*', '(', ')', '[', ']', '`', '\\', ';', '{', '}', '~', '|', ':'],
     },
     'NAV': {
@@ -494,7 +494,7 @@ def left_status(img, d, layer='BASE', l=87, r=92, charging=False, r_charging=Fal
             elif i in bonded:
                 for k in range(0, 12, 2):
                     d.point([(x + k, y), (x + k, y + 11), (x, y + k), (x + 11, y + k)], fill=1)
-            lv_text(img, 'silkscreen_bold_8', x, 12, y + 3, 'c', str(i), fill=0 if solid else 1)
+            lv_text(img, 'silkscreen_bold_8', x, 12, y + 3, 'c', str(i + 1), fill=0 if solid else 1)
     for i, (name, g) in enumerate((('cmd', CMD), ('opt', OPT), ('ctrl', CTRL), ('shift', SHIFT),
                                    ('caps', CAPS))):
         x = i * 14
@@ -509,8 +509,8 @@ def left_combos(img, d):
     text(d, (None, 71), 'COMBOS', silk_b, 'c')
     d.point([(x, 79) for x in range(0, W, 2)], fill=1)
     rows(img, d, 84, [
+        ('Q W', 'TAB'),
         ('W E', 'ESC'),
-        ('X C', 'TAB'),
         ('S D', 'CAPS'),
         ('U I', 'ENTER'),
         ('I O', 'BKSP'),

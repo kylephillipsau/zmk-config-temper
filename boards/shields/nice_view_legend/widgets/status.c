@@ -148,7 +148,7 @@ static void draw_slots(const struct frame *f, const struct status_state *state) 
         int x = 1 + i * 13, y = 34;
         bool active = i == state->active_profile_index;
         bool solid = active && state->profiles_connected[i];
-        char digit[2] = {'0' + i, '\0'}; // slots are numbered 0-4, as in the keymap
+        char digit[2] = {'1' + i, '\0'}; // slots are numbered 1-5 (BT_SEL 0-4)
 
         if (solid) {
             fill(f, x, y, 12, 12, ink);
@@ -362,15 +362,16 @@ ZMK_SUBSCRIPTION(widget_output_status, zmk_ble_active_profile_changed);
 
 // Below the status area: the combos on Base, and the left hand's keys while a layer is held. The
 // layer numbers follow config/temper.keymap, as legend_for_layer() in peripheral_status.c does.
+// WIN (1) is Windows keys on Base, so it shows the combos too.
 static const lv_img_dsc_t *card_for_layer(uint8_t layer) {
     switch (layer) {
-    case 1:
-        return &left_num;
     case 2:
-        return &left_sym;
+        return &left_num;
     case 3:
-        return &left_nav;
+        return &left_sym;
     case 4:
+        return &left_nav;
+    case 5:
         return &left_system;
     default:
         return &left_combos;

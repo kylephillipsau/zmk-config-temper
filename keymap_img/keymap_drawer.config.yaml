@@ -169,6 +169,12 @@ parse_config:
     UNDS: _
     SPACE: ⎵
   raw_binding_map:
+    # Bluetooth slots are numbered from 1, as on the screens
+    '&bt BT_SEL 0': {t: BT, h: '1'}
+    '&bt BT_SEL 1': {t: BT, h: '2'}
+    '&bt BT_SEL 2': {t: BT, h: '3'}
+    '&bt BT_SEL 3': {t: BT, h: '4'}
+    '&bt BT_SEL 4': {t: BT, h: '5'}
     '&bt BT_CLR_ALL': {t: "CLEAR\nALL BT", type: danger}
     '&bt BT_CLR': {t: "CLEAR\nSLOT", type: danger}
     '&out OUT_TOG': "USB/\nBT"
