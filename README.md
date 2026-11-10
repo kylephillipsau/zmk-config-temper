@@ -104,9 +104,8 @@ and End scroll the whole document in many Mac apps, so use D + J or L to jump wi
 
 | Keys | Sends |
 |---|---|
-| Q + W | Tab |
 | W + E | Esc |
-| S + D | Caps Lock |
+| S + D | Tab |
 | U + I | Enter |
 | I + O | Backspace |
 | O + P | Backspace |
@@ -293,7 +292,7 @@ The right half's controller in its well. The nice!view plugs into the 5-pin sock
 - Bluetooth adds a fifth slot, a key to clear one slot, and a USB/Bluetooth toggle. Slots are
   numbered from 1.
 - Slot 3 gets Windows keys, from the WIN layer and `src/os_layer.c`.
-- Tab is on Q + W.
+- Tab is on S + D, in place of Caps Lock.
 - Sleep and soft off are new. The key matrix needed `wakeup-source` to wake from sleep.
 - The bootloader and Clear Bluetooth keys moved from SYM, where rolling off Space could hit them, to
   SYSTEM. The right half gained a bootloader key.

@@ -209,9 +209,6 @@ combos:
 - p: [7, 6]
   k: ⏎
   l: [Base]
-- p: [0, 1]
-  k: ↹
-  l: [Base]
 - p: [7, 8]
   k: ⌫
   l: [Base]
@@ -225,7 +222,7 @@ combos:
   k: {t: '=', s: +}
   l: [Base]
 - p: [11, 12]
-  k: Caps
+  k: ↹
   l: [Base]
 - p: [9, 8]
   k: ⌫

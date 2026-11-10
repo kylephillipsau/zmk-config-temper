@@ -539,9 +539,8 @@ def left_combos(img, d):
     text(d, (None, 71), 'COMBOS', silk_b, 'c')
     d.point([(x, 79) for x in range(0, W, 2)], fill=1)
     rows(img, d, 84, [
-        ('Q W', 'TAB'),
         ('W E', 'ESC'),
-        ('S D', 'CAPS'),
+        ('S D', 'TAB'),
         ('U I', 'ENTER'),
         ('I O', 'BKSP'),
         ('O P', 'BKSP'),
