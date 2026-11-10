@@ -33,24 +33,24 @@ flowchart LR
     num["NUM<br/>numbers, F keys, media"]
     system["SYSTEM<br/>bootloader, clear Bluetooth"]
     base -- "hold left outer thumb" --> nav
-    base -- "hold left inner thumb" --> sym
-    base -- "hold right inner thumb" --> num
-    sym -- "also hold right inner thumb" --> system
-    num -- "also hold left inner thumb" --> system
+    base -- "hold left inner thumb" --> num
+    base -- "hold right inner thumb" --> sym
+    num -- "also hold right inner thumb" --> system
+    sym -- "also hold left inner thumb" --> system
 ```
 
 | Thumb key | Tap | Hold |
 |---|---|---|
 | Left outer | Backspace | NAV layer |
 | Left middle | Cmd (Ctrl on Windows) | Cmd (Ctrl on Windows) |
-| Left inner | Space | SYM layer |
-| Right inner | Space | NUM layer |
+| Left inner | Space | NUM layer |
+| Right inner | Space | SYM layer |
 | Right middle | Enter | Ctrl (Win on Windows) |
 | Right outer | Shift | Shift |
 
 ### Common keys
 
-NUM, on the right inner thumb:
+NUM, on the left inner thumb:
 
 | Press | To type |
 |---|---|
@@ -60,7 +60,7 @@ NUM, on the right inner thumb:
 | N, M, comma | Previous, Play, Next |
 | Full stop, /, B | Volume down, Volume up, Mute |
 
-SYM, on the left inner thumb:
+SYM, on the right inner thumb:
 
 | Press | To type |
 |---|---|
@@ -144,7 +144,7 @@ SYSTEM keys need both Space thumbs held, so typing can't hit them by accident:
 There are five slots, and the keyboard types to one device at a time. While the left half is plugged
 into a computer it types over USB, so press both Space thumbs + Y to use Bluetooth instead.
 
-| Slot | Device | Keys | Hold the left inner thumb, then |
+| Slot | Device | Keys | Hold the right inner thumb, then |
 |---|---|---|---|
 | 1 | MacBook | macOS | V |
 | 2 | Phone | macOS | C |
@@ -198,17 +198,17 @@ USB and turn its power switch off and on.
 <table>
   <tr>
     <td align="center"><img src="docs/screens/left.png" width="150" alt="Left screen on Base: both batteries, the BASE layer, Bluetooth slots 1 to 5 with slot 1 in use, the Cmd, Option, Ctrl, Shift and Caps Lock badges, and the combos"></td>
-    <td align="center"><img src="docs/screens/right-base.png" width="150" alt="Right screen on Base: the name Short Temper, a drawing of the board, and which thumbs to hold for NAV, SYM, NUM and SYSTEM"></td>
-    <td align="center"><img src="docs/screens/left-num.png" width="150" alt="Left screen with NUM held: 1 to 5 on the top row, F1 to F5 on the home row, F11 and F12 on Z and X, and Mute on B"></td>
-    <td align="center"><img src="docs/screens/right-num.png" width="150" alt="Right screen with NUM held: 6 to 0 on the top row, F6 to F10 on the home row, previous, play, next and volume down and up on the bottom row, and the right inner thumb solid"></td>
+    <td align="center"><img src="docs/screens/right-base.png" width="150" alt="Right screen on Base: the name Short Temper, a drawing of the board, and which thumbs to hold for NAV, NUM, SYM and SYSTEM"></td>
+    <td align="center"><img src="docs/screens/left-num.png" width="150" alt="Left screen with NUM held: 1 to 5 on the top row, F1 to F5 on the home row, F11 and F12 on Z and X, Mute on B, and the left inner thumb solid"></td>
+    <td align="center"><img src="docs/screens/right-num.png" width="150" alt="Right screen with NUM held: 6 to 0 on the top row, F6 to F10 on the home row, previous, play, next and volume down and up on the bottom row"></td>
   </tr>
   <tr>
     <td align="center" colspan="2">Base</td>
     <td align="center" colspan="2">NUM held</td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/screens/left-sym.png" width="150" alt="Left screen with SYM held: ! @ # $ % on the top row, Delete on D, Bluetooth slots 5 on A and 4 to 1 on Z, X, C and V, and the left inner thumb solid"></td>
-    <td align="center"><img src="docs/screens/right-sym.png" width="150" alt="Right screen with SYM held: ^ & * ( ) on the top row, [ ] ` \ ; on the home row, and { } ~ | : on the bottom row"></td>
+    <td align="center"><img src="docs/screens/left-sym.png" width="150" alt="Left screen with SYM held: ! @ # $ % on the top row, Delete on D, Bluetooth slots 5 on A and 4 to 1 on Z, X, C and V"></td>
+    <td align="center"><img src="docs/screens/right-sym.png" width="150" alt="Right screen with SYM held: ^ & * ( ) on the top row, [ ] ` \ ; on the home row, and { } ~ | : on the bottom row, and the right inner thumb solid"></td>
     <td align="center"><img src="docs/screens/left-nav.png" width="150" alt="Left screen with NAV held: Esc and Tab on Q and W, Ctrl, Option, Cmd and Shift on A, S, D and F, a camera for the screenshot on X, and the left outer thumb solid"></td>
     <td align="center"><img src="docs/screens/right-nav.png" width="150" alt="Right screen with NAV held: Page Up, Home, up, End and Backspace on the top row, and Page Down, left, down and right on the home row"></td>
   </tr>

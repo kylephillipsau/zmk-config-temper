@@ -5,7 +5,7 @@ keymap: keymap_img/temper.yaml
 board: keymap_img/temper-board.yaml
 sheets:
   Base: {file: base, reach: Tap keys to type. Hold a thumb for a layer.}
-  NUM: {file: num, reach: Hold the right inner thumb}
-  SYM: {file: sym, reach: Hold the left inner thumb, show_shifted: false}
+  NUM: {file: num, reach: Hold the left inner thumb}
+  SYM: {file: sym, reach: Hold the right inner thumb, show_shifted: false}
   NAV: {file: nav, reach: Hold the left outer thumb}
   SYSTEM: {file: system, reach: Hold both inner thumbs}

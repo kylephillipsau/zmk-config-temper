@@ -267,7 +267,7 @@ def legend_base():
     mini_temper(img, d, 63)
     # which thumbs to hold for each layer
     y = 98
-    for held, name in (((0,), 'NAV'), ((2,), 'SYM'), ((3,), 'NUM'), ((2, 3), 'SYSTEM')):
+    for held, name in (((0,), 'NAV'), ((2,), 'NUM'), ((3,), 'SYM'), ((2, 3), 'SYSTEM')):
         thumbs(img, d, 1, y, held)  # as tall as the capitals, and clear of SYSTEM
         label(img, d, W - 1 - label_w(d, name, silk), y, name, silk)
         y += 11
@@ -350,7 +350,7 @@ KEYS = {
 }
 # NAV's left hand on Windows: the same keys, drawn with Windows modifiers
 NAV_WIN_L = ['ESC', 'TAB', N, N, N, CTRL, ALT, WIN, SHIFT, N, N, SHOT, N, N, N]
-HELD = {'NUM': {'R': (0,)}, 'SYM': {'L': (2,)}, 'NAV': {'L': (0,)}, 'SYSTEM': {'L': (2,), 'R': (0,)}}
+HELD = {'NUM': {'L': (2,)}, 'SYM': {'R': (0,)}, 'NAV': {'L': (0,)}, 'SYSTEM': {'L': (2,), 'R': (0,)}}
 
 
 def key_places(hand):

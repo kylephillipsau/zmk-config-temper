@@ -24,8 +24,8 @@ layers:
     - /
   - - {t: ⌫, h: NAV}
     - ⌘
-    - {t: Space, h: SYM}
     - {t: Space, h: NUM}
+    - {t: Space, h: SYM}
     - {t: ⏎, h: ⌃}
     - ⇧
   WIN:
@@ -73,8 +73,8 @@ layers:
       MUTE', ⏮, ⏯, ⏭, Vol-, Vol+]
   - - {t: ▽, type: trans}
     - {t: ▽, type: trans}
-    - {t: ▽, type: trans}
     - {type: held}
+    - {t: ▽, type: trans}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
   SYM:
@@ -101,8 +101,8 @@ layers:
     - ':'
   - - {t: ▽, type: trans}
     - {t: ▽, type: trans}
-    - {type: held}
     - {t: ▽, type: trans}
+    - {type: held}
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
   NAV:
