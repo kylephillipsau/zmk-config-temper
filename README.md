@@ -145,11 +145,11 @@ into a computer it types over USB, so press both Space thumbs + Y to use Bluetoo
 
 | Slot | Device | Keys | Hold the right inner thumb, then |
 |---|---|---|---|
-| 1 | MacBook | macOS | V |
-| 2 | Phone | macOS | C |
-| 3 | Work computer | Windows | X |
-| 4 | | macOS | Z |
-| 5 | | macOS | A |
+| 1 | MacBook | macOS | Z |
+| 2 | Phone | macOS | X |
+| 3 | Work computer | Windows | C |
+| 4 | | macOS | V |
+| 5 | | macOS | B |
 
 To pair a device, select an unused slot and choose `Short Temper` in the device's Bluetooth settings.
 To pair a device again after forgetting the keyboard on it, select its slot and press both Space
@@ -206,7 +206,7 @@ USB and turn its power switch off and on.
     <td align="center" colspan="2">NUM held</td>
   </tr>
   <tr>
-    <td align="center"><img src="docs/screens/left-sym.png" width="150" alt="Left screen with SYM held: ! @ # $ % on the top row, Delete on D, Bluetooth slots 5 on A and 4 to 1 on Z, X, C and V"></td>
+    <td align="center"><img src="docs/screens/left-sym.png" width="150" alt="Left screen with SYM held: ! @ # $ % on the top row, Delete on D, Bluetooth slots 1 to 5 on Z, X, C, V and B"></td>
     <td align="center"><img src="docs/screens/right-sym.png" width="150" alt="Right screen with SYM held: ^ & * ( ) on the top row, [ ] ` \ ; on the home row, and { } ~ | : on the bottom row, and the right inner thumb solid"></td>
     <td align="center"><img src="docs/screens/left-nav.png" width="150" alt="Left screen with NAV held: Esc on Q, Tab on W and E, Ctrl, Option, Cmd and Shift on A, S, D and F, a camera for the screenshot on X, and the left outer thumb solid"></td>
     <td align="center"><img src="docs/screens/right-nav.png" width="150" alt="Right screen with NAV held: Page Up, Home, up, End and Backspace on the top row, and Page Down, left, down and right on the home row"></td>
