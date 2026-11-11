@@ -106,7 +106,7 @@ layers:
     - {t: ▽, type: trans}
     - {t: ▽, type: trans}
   NAV:
-  - [Esc, ↹, '', '', '', PgUp, Home, ↑, End, ⌫]
+  - [Esc, ↹, ↹, '', '', PgUp, Home, ↑, End, ⌫]
   - [⌃, ⎇, ⌘, ⇧, '', PgDn, ←, ↓, →, '']
   - ['', 'Screen-
 

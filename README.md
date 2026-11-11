@@ -76,7 +76,7 @@ NAV, on the left outer thumb:
 | I, J, K, L | Up, left, down, right |
 | U, O | Home, End |
 | Y, H | Page Up, Page Down |
-| W, Q | Tab, Esc |
+| W or E, Q | Tab, Esc |
 | P | Backspace, which repeats while held |
 | X | Screenshot of an area: Cmd+Shift+4, or Win+Shift+S on Windows |
 
@@ -91,7 +91,7 @@ right hand navigates:
 | Select a word | S + F + J or L |
 | Jump to line start or end | D + J or L |
 | Switch apps (Cmd+Tab) | D + W, tapping W to move along |
-| Alt+Tab | S + W, tapping W to move along |
+| Alt+Tab | S + E, tapping E to move along |
 | Switch Spaces (Ctrl+left or right) | A + J or L |
 | Mission Control (Ctrl+up) | A + I |
 | The app's windows (Ctrl+down) | A + K |
@@ -169,7 +169,7 @@ the Windows logo and ALT in place of Cmd and Option.
 <table>
   <tr>
     <td align="center"><img src="docs/screens/left-win.png" width="150" alt="Left screen on slot 3: the WIN layer, slot 3 in use, and the Windows logo, ALT, Ctrl, Shift and Caps Lock badges above the combos"></td>
-    <td align="center"><img src="docs/screens/left-nav-win.png" width="150" alt="Left screen with NAV held on slot 3: Esc and Tab on Q and W, Ctrl, ALT, the Windows logo and Shift on A, S, D and F, a camera for the screenshot on X, and the Windows logo badge held"></td>
+    <td align="center"><img src="docs/screens/left-nav-win.png" width="150" alt="Left screen with NAV held on slot 3: Esc on Q, Tab on W and E, Ctrl, ALT, the Windows logo and Shift on A, S, D and F, a camera for the screenshot on X, and the Windows logo badge held"></td>
   </tr>
   <tr>
     <td align="center">Slot 3</td>
@@ -208,7 +208,7 @@ USB and turn its power switch off and on.
   <tr>
     <td align="center"><img src="docs/screens/left-sym.png" width="150" alt="Left screen with SYM held: ! @ # $ % on the top row, Delete on D, Bluetooth slots 5 on A and 4 to 1 on Z, X, C and V"></td>
     <td align="center"><img src="docs/screens/right-sym.png" width="150" alt="Right screen with SYM held: ^ & * ( ) on the top row, [ ] ` \ ; on the home row, and { } ~ | : on the bottom row, and the right inner thumb solid"></td>
-    <td align="center"><img src="docs/screens/left-nav.png" width="150" alt="Left screen with NAV held: Esc and Tab on Q and W, Ctrl, Option, Cmd and Shift on A, S, D and F, a camera for the screenshot on X, and the left outer thumb solid"></td>
+    <td align="center"><img src="docs/screens/left-nav.png" width="150" alt="Left screen with NAV held: Esc on Q, Tab on W and E, Ctrl, Option, Cmd and Shift on A, S, D and F, a camera for the screenshot on X, and the left outer thumb solid"></td>
     <td align="center"><img src="docs/screens/right-nav.png" width="150" alt="Right screen with NAV held: Page Up, Home, up, End and Backspace on the top row, and Page Down, left, down and right on the home row"></td>
   </tr>
   <tr>

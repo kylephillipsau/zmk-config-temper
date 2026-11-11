@@ -216,7 +216,7 @@
         layer_3 {
             display-name = "NAV";
             bindings = <
-  &kp ESC    &kp TAB             &none     &none      &none    &kp PG_UP  &kp HOME  &kp UP    &kp END    &kp BACKSPACE
+  &kp ESC    &kp TAB             &kp TAB   &none      &none    &kp PG_UP  &kp HOME  &kp UP    &kp END    &kp BACKSPACE
   &kp LCTRL  &kp LALT            &kp LGUI  &kp LSHFT  &none    &kp PG_DN  &kp LEFT  &kp DOWN  &kp RIGHT  &none
   &none      &kp SCREENSHOT_MAC  &none     &none      &none    &none      &none     &none     &none      &none
                                  &trans    &trans     &trans   &trans     &trans    &trans
